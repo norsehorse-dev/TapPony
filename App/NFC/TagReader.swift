@@ -79,8 +79,18 @@ final class CoreNFCTagReader: NSObject, TagReader, NFCTagReaderSessionDelegate {
                 s.alertMessage = alert
                 self.session = s
                 s.begin()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 12) { [weak self] in
+                    guard let self, self.session === s, self.isPending else { return }
+                    s.alertMessage = String(localized: "Nothing detected yet. iPhone can't read bank cards, MIFARE Classic, or smart cards it doesn't recognize.")
+                }
             }
         }
+    }
+
+    private var isPending: Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        return continuation != nil
     }
 
     private func finish(_ result: Result<TagReading, Error>) {
