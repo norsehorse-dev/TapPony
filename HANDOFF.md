@@ -37,7 +37,7 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
 
 ## Next: Phase A remainder
 
-1. Run the three commands above and fix whatever the first real compile finds.
+1. Done Sep 25, 2026: `swift test`, the iOS simulator build, `:core:test` and `:app:assembleDebug` all pass on the Mac (after two setup fixes: the iOS 18 platform declaration in Package.swift and a local `local.properties` for the SDK path).
 2. Hardware spike, one evening, both phones: NTAG213/215/216, Ultralight EV1, a MIFARE Classic 1K fob, DESFire EV1 and EV3 (one in random-ID mode), ICODE SLIX. For each tag, record UID bytes and order on both platforms and append them to `fixtures/uid_vectors.json` under `hardware`.
 3. Confirm the Read NFC Tag action returns its value to a running shortcut (the plan's Phase A check).
 4. Then Phase B: history (SwiftData / Room), the Test view polish, response message extraction, and error copy for every read state.
