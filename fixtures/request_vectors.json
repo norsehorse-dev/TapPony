@@ -1,0 +1,1134 @@
+{
+ "description": "Request builder vectors. Variables are variables_vectors case 'ntag215_text'.",
+ "variables": {
+  "uid": "04A27F1B5E8000",
+  "uid_colon": "04:A2:7F:1B:5E:80:00",
+  "uid_dec": "1304566710566912",
+  "uid_rev": "00805E1B7FA204",
+  "uid_len": "7",
+  "random_uid": "false",
+  "manufacturer": "NXP",
+  "tag_type": "mifare_ultralight",
+  "chip": "NTAG215",
+  "signature": "A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1",
+  "counter": "17",
+  "atqa": "",
+  "sak": "",
+  "dsfid": "",
+  "afi": "",
+  "block_size": "",
+  "block_count": "",
+  "idm": "",
+  "pmm": "",
+  "system_code": "",
+  "pupi": "",
+  "historical_bytes": "",
+  "application_data": "",
+  "tag_label": "",
+  "payload": "Kitchen door",
+  "ndef_text": "Kitchen door",
+  "ndef_uri": "",
+  "ndef_json": "[{\"tnf\":1,\"type\":\"T\",\"id\":\"\",\"payload\":\"AmVuS2l0Y2hlbiBkb29y\",\"text\":\"Kitchen door\"}]",
+  "ndef_raw": "0QEPVAJlbktpdGNoZW4gZG9vcg==",
+  "ndef_count": "1",
+  "token": "",
+  "timestamp": "2026-09-25T22:30:05.123Z",
+  "timestamp_local": "2026-09-25T17:30:05.123-05:00",
+  "unix": "1790375405",
+  "tz": "America/Chicago",
+  "sent_at": "2026-09-25T22:30:07.000Z",
+  "profile": "Front door",
+  "profile_id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+  "device_label": "",
+  "platform": "ios",
+  "nonce": "00112233445566778899aabbccddeeff",
+  "seq": "42"
+ },
+ "secrets": {
+  "HA_TOKEN": "tok/en+=",
+  "PW": "p@ss:w",
+  "HMAC_KEY": "whsec_test_key",
+  "API": "k-123"
+ },
+ "cases": [
+  {
+   "id": "json_default",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "ha_webhook_local",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "http://homeassistant.local:8123/api/webhook/tappony-{uid|lower}",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\",\"chip\":\"{chip}\",\"payload\":\"{payload}\",\"at\":\"{timestamp}\",\"seq\":{seq}}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": true
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "http://homeassistant.local:8123/api/webhook/tappony-04a27f1b5e8000",
+    "headers": [
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\",\"chip\":\"NTAG215\",\"payload\":\"Kitchen door\",\"at\":\"2026-09-25T22:30:05.123Z\",\"seq\":42}"
+   }
+  },
+  {
+   "id": "ha_tag_scanned_bearer",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "http://192.168.1.10:8123/api/events/tag_scanned",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"tag_id\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": true
+    },
+    "auth": {
+     "type": "bearer",
+     "secret": "HA_TOKEN"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "http://192.168.1.10:8123/api/events/tag_scanned",
+    "headers": [
+     [
+      "Authorization",
+      "Bearer tok/en+="
+     ],
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"tag_id\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "local_http_not_enabled",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "http://192.168.1.10/x",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "hostPolicy:localHttpNotEnabled"
+  },
+  {
+   "id": "public_http_rejected",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "http://example.com/x",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": true
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "hostPolicy:plainHttpPublic"
+  },
+  {
+   "id": "templated_host_rejected",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://{payload}/x",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "urlTemplate:templatedAuthority"
+  },
+  {
+   "id": "get_query_no_body",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "GET",
+     "url": "https://example.com/log?uid={uid}&t={timestamp}&p={payload}",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "GET",
+    "url": "https://example.com/log?uid=04A27F1B5E8000&t=2026-09-25T22%3A30%3A05.123Z&p=Kitchen%20door",
+    "headers": [],
+    "body": null
+   }
+  },
+  {
+   "id": "delete_ignores_body",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "DELETE",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "DELETE",
+    "url": "https://example.com/hook",
+    "headers": [],
+    "body": null
+   }
+  },
+  {
+   "id": "form_body",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "form",
+      "template": "",
+      "contentType": null,
+      "fields": [
+       {
+        "name": "uid",
+        "value": "{uid}"
+       },
+       {
+        "name": "note",
+        "value": "{payload} & more"
+       }
+      ]
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "Content-Type",
+      "application/x-www-form-urlencoded"
+     ]
+    ],
+    "body": "uid=04A27F1B5E8000&note=Kitchen+door+%26+more"
+   }
+  },
+  {
+   "id": "raw_body_custom_ct",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "PUT",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "raw",
+      "template": "{uid} {payload}",
+      "contentType": "text/csv",
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "PUT",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "Content-Type",
+      "text/csv"
+     ]
+    ],
+    "body": "04A27F1B5E8000 Kitchen door"
+   }
+  },
+  {
+   "id": "user_content_type_wins",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [
+      {
+       "name": "content-type",
+       "value": "application/vnd.x+json",
+       "secret": false
+      }
+     ],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "content-type",
+      "application/vnd.x+json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "basic_auth",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "basic",
+     "username": "tapper",
+     "passwordSecret": "PW"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "Authorization",
+      "Basic dGFwcGVyOnBAc3M6dw=="
+     ],
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "api_key",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "apiKey",
+     "header": "X-API-Key",
+     "secret": "API"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "X-API-Key",
+      "k-123"
+     ],
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "bad_header_name",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [
+      {
+       "name": "Bad Header",
+       "value": "x",
+       "secret": false
+      }
+     ],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "badHeaderName"
+  },
+  {
+   "id": "header_injection_stripped",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [
+      {
+       "name": "X-Note",
+       "value": "{payload}\r\nX-Evil: 1",
+       "secret": false
+      }
+     ],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "X-Note",
+      "Kitchen doorX-Evil: 1"
+     ],
+     [
+      "Content-Type",
+      "application/json"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "missing_secret",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "bearer",
+     "secret": "NOPE"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "template:unknownSecret"
+  },
+  {
+   "id": "signed",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": true,
+     "secret": "HMAC_KEY"
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "Content-Type",
+      "application/json"
+     ],
+     [
+      "X-TapPony-Timestamp",
+      "1790375407"
+     ],
+     [
+      "X-TapPony-Nonce",
+      "00112233445566778899aabbccddeeff"
+     ],
+     [
+      "X-TapPony-Signature",
+      "sha256=f6da2fa38408570eb41184f2ad1d1bcdea042cc0f5c93f8be3fdb043c42e25b0"
+     ]
+    ],
+    "body": "{\"uid\":\"04A27F1B5E8000\"}"
+   }
+  },
+  {
+   "id": "signed_get_empty_body",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "GET",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":\"{uid}\"}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": true,
+     "secret": "HMAC_KEY"
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "GET",
+    "url": "https://example.com/hook",
+    "headers": [
+     [
+      "X-TapPony-Timestamp",
+      "1790375407"
+     ],
+     [
+      "X-TapPony-Nonce",
+      "00112233445566778899aabbccddeeff"
+     ],
+     [
+      "X-TapPony-Signature",
+      "sha256=00e7d8db4d0809597f8e5e29acae8533195d20dae83c6b33778155e65485f9db"
+     ]
+    ],
+    "body": null
+   }
+  },
+  {
+   "id": "invalid_json_body",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://example.com/hook",
+     "headers": [],
+     "body": {
+      "type": "json",
+      "template": "{\"uid\":{uid|raw}}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "error": "template:invalidJsonBody"
+  },
+  {
+   "id": "ntfy_text",
+   "profile": {
+    "schema": 1,
+    "id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "name": "Front door",
+    "request": {
+     "method": "POST",
+     "url": "https://ntfy.sh/tappony-test",
+     "headers": [],
+     "body": {
+      "type": "raw",
+      "template": "Tag {uid} ({chip}) scanned: {payload}",
+      "contentType": null,
+      "fields": []
+     },
+     "timeoutSeconds": 15,
+     "followRedirects": false,
+     "allowLocalHttp": false
+    },
+    "auth": {
+     "type": "none"
+    },
+    "signing": {
+     "enabled": false,
+     "secret": null
+    },
+    "tag": {
+     "technologies": [
+      "iso14443"
+     ],
+     "extendedReads": true,
+     "requireNdef": false
+    },
+    "after": {
+     "messageField": null,
+     "keepBodies": false,
+     "sound": true,
+     "haptic": true
+    }
+   },
+   "sendUnix": 1790375407,
+   "expect": {
+    "method": "POST",
+    "url": "https://ntfy.sh/tappony-test",
+    "headers": [
+     [
+      "Content-Type",
+      "text/plain; charset=utf-8"
+     ]
+    ],
+    "body": "Tag 04A27F1B5E8000 (NTAG215) scanned: Kitchen door"
+   }
+  }
+ ]
+}

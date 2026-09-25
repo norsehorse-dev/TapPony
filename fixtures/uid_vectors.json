@@ -1,0 +1,221 @@
+{
+ "description": "UID canonicalization and chip identification. PROFILE_SCHEMA.md section 8. Hardware-captured vectors from the Phase A spike are appended under 'hardware' when they exist.",
+ "cases": [
+  {
+   "family": "mifare",
+   "raw": "04A27F1B5E8000",
+   "expect": {
+    "uid": "04A27F1B5E8000",
+    "uid_colon": "04:A2:7F:1B:5E:80:00",
+    "uid_dec": "1304566710566912",
+    "uid_rev": "00805E1B7FA204",
+    "uid_len": "7",
+    "random_uid": "false",
+    "manufacturer": "NXP"
+   }
+  },
+  {
+   "family": "mifare",
+   "raw": "08A1B2C3",
+   "expect": {
+    "uid": "08A1B2C3",
+    "uid_colon": "08:A1:B2:C3",
+    "uid_dec": "144814787",
+    "uid_rev": "C3B2A108",
+    "uid_len": "4",
+    "random_uid": "true",
+    "manufacturer": ""
+   }
+  },
+  {
+   "family": "mifare",
+   "raw": "DEADBEEF",
+   "expect": {
+    "uid": "DEADBEEF",
+    "uid_colon": "DE:AD:BE:EF",
+    "uid_dec": "3735928559",
+    "uid_rev": "EFBEADDE",
+    "uid_len": "4",
+    "random_uid": "false",
+    "manufacturer": ""
+   }
+  },
+  {
+   "family": "mifare",
+   "raw": "0266A1B2C3D4E5",
+   "expect": {
+    "uid": "0266A1B2C3D4E5",
+    "uid_colon": "02:66:A1:B2:C3:D4:E5",
+    "uid_dec": "675794628367589",
+    "uid_rev": "E5D4C3B2A16602",
+    "uid_len": "7",
+    "random_uid": "false",
+    "manufacturer": "STMicroelectronics"
+   }
+  },
+  {
+   "family": "iso15693",
+   "raw": "E004015012345678",
+   "expect": {
+    "uid": "E004015012345678",
+    "uid_colon": "E0:04:01:50:12:34:56:78",
+    "uid_dec": "16142028407817131640",
+    "uid_rev": "78563412500104E0",
+    "uid_len": "8",
+    "random_uid": "false",
+    "manufacturer": "NXP"
+   }
+  },
+  {
+   "family": "iso15693",
+   "raw": "78563412500104E0",
+   "expect": {
+    "uid": "E004015012345678",
+    "uid_colon": "E0:04:01:50:12:34:56:78",
+    "uid_dec": "16142028407817131640",
+    "uid_rev": "78563412500104E0",
+    "uid_len": "8",
+    "random_uid": "false",
+    "manufacturer": "NXP"
+   }
+  },
+  {
+   "family": "iso15693",
+   "raw": "E002080011223344",
+   "expect": {
+    "uid": "E002080011223344",
+    "uid_colon": "E0:02:08:00:11:22:33:44",
+    "uid_dec": "16141472810829755204",
+    "uid_rev": "44332211000802E0",
+    "uid_len": "8",
+    "random_uid": "false",
+    "manufacturer": "STMicroelectronics"
+   }
+  },
+  {
+   "family": "felica",
+   "raw": "0114B3A2C1D0E0F0",
+   "expect": {
+    "uid": "0114B3A2C1D0E0F0",
+    "uid_colon": "01:14:B3:A2:C1:D0:E0:F0",
+    "uid_dec": "77884605189906672",
+    "uid_rev": "F0E0D0C1A2B31401",
+    "uid_len": "8",
+    "random_uid": "false",
+    "manufacturer": "Sony"
+   }
+  },
+  {
+   "family": "iso7816_a",
+   "raw": "04112233445566",
+   "expect": {
+    "uid": "04112233445566",
+    "uid_colon": "04:11:22:33:44:55:66",
+    "uid_dec": "1144738493519206",
+    "uid_rev": "66554433221104",
+    "uid_len": "7",
+    "random_uid": "false",
+    "manufacturer": "NXP"
+   }
+  },
+  {
+   "family": "iso7816_b",
+   "raw": "A1B2C3D4",
+   "expect": {
+    "uid": "A1B2C3D4",
+    "uid_colon": "A1:B2:C3:D4",
+    "uid_dec": "2712847316",
+    "uid_rev": "D4C3B2A1",
+    "uid_len": "4",
+    "random_uid": "false",
+    "manufacturer": ""
+   }
+  },
+  {
+   "family": "mifare",
+   "raw": "",
+   "expect": {
+    "uid": "",
+    "uid_colon": "",
+    "uid_dec": "",
+    "uid_rev": "",
+    "uid_len": "0",
+    "random_uid": "false",
+    "manufacturer": ""
+   }
+  }
+ ],
+ "chips": [
+  {
+   "kind": "getVersion",
+   "response": "0004040201000F03",
+   "chip": "NTAG213"
+  },
+  {
+   "kind": "getVersion",
+   "response": "0004040201001103",
+   "chip": "NTAG215"
+  },
+  {
+   "kind": "getVersion",
+   "response": "0004040201001303",
+   "chip": "NTAG216"
+  },
+  {
+   "kind": "getVersion",
+   "response": "0004030101000B03",
+   "chip": "Ultralight EV1"
+  },
+  {
+   "kind": "getVersion",
+   "response": "0004030101000E03",
+   "chip": "Ultralight EV1"
+  },
+  {
+   "kind": "getVersion",
+   "response": "0004040201001503",
+   "chip": ""
+  },
+  {
+   "kind": "getVersion",
+   "response": "0005040201000F03",
+   "chip": ""
+  },
+  {
+   "kind": "getVersion",
+   "response": "00040402",
+   "chip": ""
+  },
+  {
+   "kind": "desfire",
+   "response": "04010101001A05",
+   "chip": "DESFire EV1"
+  },
+  {
+   "kind": "desfire",
+   "response": "04010112001A05",
+   "chip": "DESFire EV2"
+  },
+  {
+   "kind": "desfire",
+   "response": "04010133001A05",
+   "chip": "DESFire EV3"
+  },
+  {
+   "kind": "desfire",
+   "response": "04010100001805",
+   "chip": "DESFire"
+  },
+  {
+   "kind": "desfire",
+   "response": "04010177001A05",
+   "chip": ""
+  },
+  {
+   "kind": "desfire",
+   "response": "0401",
+   "chip": ""
+  }
+ ],
+ "hardware": []
+}

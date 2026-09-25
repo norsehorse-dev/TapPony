@@ -1,0 +1,399 @@
+{
+ "description": "Host policy vectors. PROFILE_SCHEMA.md section 7.",
+ "cases": [
+  {
+   "url": "https://example.com/hook",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "https://EXAMPLE.com./hook",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "https://ntfy.sh/topic",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "https://example.com:8443/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "http://example.com/hook",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "http://8.8.8.8/hook",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "http://192.168.1.10:8123/api",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://192.168.1.10:8123/api",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "localHttpNotEnabled"
+  },
+  {
+   "url": "http://10.0.0.5/",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://172.16.0.1/",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://172.31.255.255/",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://172.32.0.1/",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "http://169.254.10.2/",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://127.0.0.1:8080/",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://homeassistant.local:8123/api/webhook/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://HomeAssistant.Local./x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://nas.home.arpa/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://homeassistant:8123/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "https://homeassistant.local/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "localTls"
+  },
+  {
+   "url": "https://192.168.1.10/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "localTls"
+  },
+  {
+   "url": "http://[fe80::1]/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[fd12:3456:789a::1]:8080/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[::1]/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[2001:4860:4860::8888]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "http://[::ffff:192.168.1.1]/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[::ffff:8.8.8.8]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "https://[2001:db8::1]/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "http://3232235777/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "https://3232235777/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://0xC0A80101/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://0300.0250.1.1/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://192.168.1/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://192.168.01.1/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://256.1.1.1/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "http://0x7f.1/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "numericHost"
+  },
+  {
+   "url": "ftp://example.com/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "scheme"
+  },
+  {
+   "url": "javascript://example.com/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "scheme"
+  },
+  {
+   "url": "https://user:pass@example.com/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "userinfo"
+  },
+  {
+   "url": "https://@example.com/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "userinfo"
+  },
+  {
+   "url": "https:///x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "example.com/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://exa mple.com/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://-bad.com/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://example.com:99999/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://example.com:/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://[2001:db8::1]:70000/x",
+   "allowLocalHttp": false,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://[2001:db8::1]:8443/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "http://[::ffff:c0a8:101]/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[1:2:3:4:5:6:7:8:9]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "http://[1::2::3]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "http://[::ffff:192.168.01.1]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "http://[fc00::]/x",
+   "allowLocalHttp": true,
+   "verdict": "allowed",
+   "detail": "localPlain"
+  },
+  {
+   "url": "http://[fec0::1]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "plainHttpPublic"
+  },
+  {
+   "url": "http://[fe80::1%25en0]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "http://[zz::1]/x",
+   "allowLocalHttp": true,
+   "verdict": "rejected",
+   "detail": "malformed"
+  },
+  {
+   "url": "https://deadbeef/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "localTls"
+  },
+  {
+   "url": "https://abc.123/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "HTTPS://Example.com/x",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "https://example.com?x=1",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  },
+  {
+   "url": "https://example.com#frag",
+   "allowLocalHttp": false,
+   "verdict": "allowed",
+   "detail": "publicTls"
+  }
+ ],
+ "templateCases": [
+  {
+   "template": "https://example.com/hook/{uid}",
+   "result": "ok"
+  },
+  {
+   "template": "https://example.com/?u={uid}",
+   "result": "ok"
+  },
+  {
+   "template": "https://{secret:HOST}/hook",
+   "result": "templatedAuthority"
+  },
+  {
+   "template": "https://example.{tld}/hook",
+   "result": "templatedAuthority"
+  },
+  {
+   "template": "{scheme}://example.com/",
+   "result": "templatedAuthority"
+  },
+  {
+   "template": "https://example.com:{port}/",
+   "result": "templatedAuthority"
+  },
+  {
+   "template": "https://example.com?q={uid}",
+   "result": "ok"
+  },
+  {
+   "template": "no-scheme/{uid}",
+   "result": "malformed"
+  }
+ ]
+}

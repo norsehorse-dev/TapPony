@@ -1,0 +1,35 @@
+{
+ "description": "HMAC-SHA256 signing vectors. PROFILE_SCHEMA.md section 6. Signature covers timestamp + '.' + body.",
+ "cases": [
+  {
+   "key": "whsec_test_key",
+   "timestamp": "1790375405",
+   "body": "{\"uid\":\"04A27F1B5E8000\"}",
+   "signature": "sha256=f5aa7547d634e95ee53d6bc50405baae8dadfcc6f0c9b3c6d7d4476efe5d5384"
+  },
+  {
+   "key": "whsec_test_key",
+   "timestamp": "1790375405",
+   "body": "",
+   "signature": "sha256=cd611b341e3ed0bce34dd02b9d65638dd9dda2fcf058869110c3099b69b22654"
+  },
+  {
+   "key": "k",
+   "timestamp": "0",
+   "body": "héllo ✓",
+   "signature": "sha256=ca04a4efdd0cb3f13117801625b5a8118d14546566f81c0598a109b48fe2cad3"
+  },
+  {
+   "key": "",
+   "timestamp": "1790375405",
+   "body": "empty key",
+   "signature": "sha256=94cbd968ba2d49d573f35cf327f7caf4f1c11e4816afa93b4ea1f8a1ab12907a"
+  },
+  {
+   "key": "a much longer key that exceeds the sha256 block size of sixty four bytes, to test key hashing",
+   "timestamp": "1790375405",
+   "body": "x=1&y=2",
+   "signature": "sha256=c26e9edbea3b78d7b63fde212b05fa14abeba0f865b19d258063aa2eb497799b"
+  }
+ ]
+}

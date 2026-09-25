@@ -1,0 +1,508 @@
+{
+ "description": "Template rendering vectors. PROFILE_SCHEMA.md sections 2 to 5.",
+ "variables": {
+  "uid": "04A27F1B5E8000",
+  "uid_colon": "04:A2:7F:1B:5E:80:00",
+  "uid_len": "7",
+  "chip": "NTAG215",
+  "tag_type": "mifare_ultralight",
+  "payload": "Kitchen \"door\"\n\ttab\\slash",
+  "ndef_text": "héllo wörld ✓",
+  "ndef_uri": "https://tappony.app/t/abc?k=1&x=2",
+  "timestamp": "2026-09-25T22:30:05.123Z",
+  "seq": "42",
+  "counter": "",
+  "random_uid": "false",
+  "profile": "Front door",
+  "device_label": "",
+  "control": "a\u0001b\u001fc\u0000d",
+  "crlf": "ok\r\nX-Injected: 1",
+  "hostile_json": "\", \"admin\": true, \"x\": \"",
+  "number_like": "-12.5e3",
+  "leading_zero": "007",
+  "emoji": "🐴 tap",
+  "bad_date": "2026-02-30T10:00:00Z",
+  "year_zero": "0000-01-01T00:00:00Z",
+  "leap_day": "2024-02-29T12:00:00.5Z"
+ },
+ "secrets": {
+  "HA_TOKEN": "s3cr3t/+=",
+  "HMAC_KEY": "whsec_test_key"
+ },
+ "cases": [
+  {
+   "id": "plain_uid",
+   "context": "raw",
+   "template": "{uid}",
+   "output": "04A27F1B5E8000"
+  },
+  {
+   "id": "literal_only",
+   "context": "raw",
+   "template": "no placeholders here",
+   "output": "no placeholders here"
+  },
+  {
+   "id": "double_brace",
+   "context": "raw",
+   "template": "{{uid}",
+   "output": "{uid}"
+  },
+  {
+   "id": "lone_close",
+   "context": "raw",
+   "template": "a } b",
+   "output": "a } b"
+  },
+  {
+   "id": "space_is_literal",
+   "context": "raw",
+   "template": "{ uid }",
+   "output": "{ uid }"
+  },
+  {
+   "id": "upper_after_brace_literal",
+   "context": "raw",
+   "template": "{UID}",
+   "output": "{UID}"
+  },
+  {
+   "id": "digit_after_brace_literal",
+   "context": "raw",
+   "template": "{1}",
+   "output": "{1}"
+  },
+  {
+   "id": "unterminated",
+   "context": "raw",
+   "template": "{uid",
+   "error": "unterminated"
+  },
+  {
+   "id": "unterminated_nested",
+   "context": "raw",
+   "template": "{uid{seq}}",
+   "error": "unterminated"
+  },
+  {
+   "id": "unknown_var",
+   "context": "raw",
+   "template": "{nope}",
+   "error": "unknownVariable"
+  },
+  {
+   "id": "bad_name_char",
+   "context": "raw",
+   "template": "{uid-x}",
+   "error": "badName"
+  },
+  {
+   "id": "unknown_mod",
+   "context": "raw",
+   "template": "{uid|shout}",
+   "error": "unknownModifier"
+  },
+  {
+   "id": "empty_mod",
+   "context": "raw",
+   "template": "{uid|}",
+   "error": "unknownModifier"
+  },
+  {
+   "id": "mod_args_on_lower",
+   "context": "raw",
+   "template": "{uid|lower:1}",
+   "error": "badModifierArgs"
+  },
+  {
+   "id": "slice_no_args",
+   "context": "raw",
+   "template": "{uid|slice}",
+   "error": "badModifierArgs"
+  },
+  {
+   "id": "slice_bad_arg",
+   "context": "raw",
+   "template": "{uid|slice:a}",
+   "error": "badModifierArgs"
+  },
+  {
+   "id": "default_no_arg",
+   "context": "raw",
+   "template": "{uid|default}",
+   "error": "badModifierArgs"
+  },
+  {
+   "id": "default_with_colons",
+   "context": "raw",
+   "template": "{counter|default:12:00}",
+   "output": "12:00"
+  },
+  {
+   "id": "default_empty_text",
+   "context": "raw",
+   "template": "[{counter|default:}]",
+   "output": "[]"
+  },
+  {
+   "id": "empty_var_renders_empty",
+   "context": "raw",
+   "template": "[{counter}]",
+   "output": "[]"
+  },
+  {
+   "id": "mod_lower",
+   "context": "raw",
+   "template": "{uid|lower}",
+   "output": "04a27f1b5e8000"
+  },
+  {
+   "id": "mod_upper_ascii_only",
+   "context": "raw",
+   "template": "{ndef_text|upper}",
+   "output": "HéLLO WöRLD ✓"
+  },
+  {
+   "id": "mod_trim",
+   "context": "raw",
+   "template": "[{crlf|slice:0:2}]",
+   "output": "[ok]"
+  },
+  {
+   "id": "mod_b64",
+   "context": "raw",
+   "template": "{ndef_text|b64}",
+   "output": "aMOpbGxvIHfDtnJsZCDinJM="
+  },
+  {
+   "id": "mod_url",
+   "context": "raw",
+   "template": "{ndef_uri|url}",
+   "output": "https%3A%2F%2Ftappony.app%2Ft%2Fabc%3Fk%3D1%26x%3D2"
+  },
+  {
+   "id": "mod_colon",
+   "context": "raw",
+   "template": "{uid|colon}",
+   "output": "04:A2:7F:1B:5E:80:00"
+  },
+  {
+   "id": "mod_rev",
+   "context": "raw",
+   "template": "{uid|rev}",
+   "output": "00805E1B7FA204"
+  },
+  {
+   "id": "mod_dec",
+   "context": "raw",
+   "template": "{uid|dec}",
+   "output": "1304566710566912"
+  },
+  {
+   "id": "mod_dec_from_colon",
+   "context": "raw",
+   "template": "{uid_colon|dec}",
+   "output": "1304566710566912"
+  },
+  {
+   "id": "mod_rev_non_hex_passthrough",
+   "context": "raw",
+   "template": "{profile|rev}",
+   "output": "Front door"
+  },
+  {
+   "id": "mod_colon_odd_passthrough",
+   "context": "raw",
+   "template": "{uid|slice:0:3|colon}",
+   "output": "04A"
+  },
+  {
+   "id": "mod_unix",
+   "context": "raw",
+   "template": "{timestamp|unix}",
+   "output": "1790375405"
+  },
+  {
+   "id": "mod_unix_passthrough",
+   "context": "raw",
+   "template": "{profile|unix}",
+   "output": "Front door"
+  },
+  {
+   "id": "mod_unix_bad_date_passthrough",
+   "context": "raw",
+   "template": "{bad_date|unix}",
+   "output": "2026-02-30T10:00:00Z"
+  },
+  {
+   "id": "mod_unix_year_zero_passthrough",
+   "context": "raw",
+   "template": "{year_zero|unix}",
+   "output": "0000-01-01T00:00:00Z"
+  },
+  {
+   "id": "mod_unix_leap_day",
+   "context": "raw",
+   "template": "{leap_day|unix}",
+   "output": "1709208000"
+  },
+  {
+   "id": "mod_slice_codepoints",
+   "context": "raw",
+   "template": "{emoji|slice:0:1}",
+   "output": "🐴"
+  },
+  {
+   "id": "mod_slice_open_end",
+   "context": "raw",
+   "template": "{uid|slice:10}",
+   "output": "8000"
+  },
+  {
+   "id": "mod_slice_clamped",
+   "context": "raw",
+   "template": "{uid|slice:5:500}",
+   "output": "F1B5E8000"
+  },
+  {
+   "id": "mod_slice_reversed_empty",
+   "context": "raw",
+   "template": "[{uid|slice:5:2}]",
+   "output": "[]"
+  },
+  {
+   "id": "mod_default_used",
+   "context": "raw",
+   "template": "{device_label|default:phone}",
+   "output": "phone"
+  },
+  {
+   "id": "mod_default_unused",
+   "context": "raw",
+   "template": "{seq|default:0}",
+   "output": "42"
+  },
+  {
+   "id": "mod_chain",
+   "context": "raw",
+   "template": "{uid|lower|colon}",
+   "output": "04:A2:7F:1B:5E:80:00"
+  },
+  {
+   "id": "mod_trim_ws",
+   "context": "raw",
+   "template": "[{payload|slice:0:8|trim}]",
+   "output": "[Kitchen]"
+  },
+  {
+   "id": "url_context_escapes",
+   "context": "url",
+   "template": "https://example.com/t/{payload}",
+   "output": "https://example.com/t/Kitchen%20%22door%22%0A%09tab%5Cslash"
+  },
+  {
+   "id": "url_context_utf8",
+   "context": "url",
+   "template": "https://example.com/?q={ndef_text}",
+   "output": "https://example.com/?q=h%C3%A9llo%20w%C3%B6rld%20%E2%9C%93"
+  },
+  {
+   "id": "url_raw_skips",
+   "context": "url",
+   "template": "https://example.com/{ndef_uri|raw}",
+   "output": "https://example.com/https://tappony.app/t/abc?k=1&x=2"
+  },
+  {
+   "id": "url_url_mod_no_double",
+   "context": "url",
+   "template": "https://example.com/?u={ndef_uri|url}",
+   "output": "https://example.com/?u=https%3A%2F%2Ftappony.app%2Ft%2Fabc%3Fk%3D1%26x%3D2"
+  },
+  {
+   "id": "url_secret",
+   "context": "url",
+   "template": "https://example.com/?key={secret:HA_TOKEN}",
+   "output": "https://example.com/?key=s3cr3t%2F%2B%3D"
+  },
+  {
+   "id": "url_unknown_secret",
+   "context": "url",
+   "template": "https://example.com/?key={secret:NOPE}",
+   "error": "unknownSecret"
+  },
+  {
+   "id": "url_bad_secret_name",
+   "context": "url",
+   "template": "https://example.com/?key={secret:no-pe}",
+   "error": "badName"
+  },
+  {
+   "id": "header_strips_crlf",
+   "context": "header",
+   "template": "{crlf}",
+   "output": "okX-Injected: 1"
+  },
+  {
+   "id": "header_raw_still_strips",
+   "context": "header",
+   "template": "{crlf|raw}",
+   "output": "okX-Injected: 1"
+  },
+  {
+   "id": "header_strips_nul_keeps_other_controls",
+   "context": "header",
+   "template": "{control}",
+   "output": "a\u0001b\u001fcd"
+  },
+  {
+   "id": "header_bearer_secret",
+   "context": "header",
+   "template": "Bearer {secret:HA_TOKEN}",
+   "output": "Bearer s3cr3t/+="
+  },
+  {
+   "id": "form_escapes",
+   "context": "form",
+   "template": "{payload}",
+   "output": "Kitchen+%22door%22%0A%09tab%5Cslash"
+  },
+  {
+   "id": "form_utf8",
+   "context": "form",
+   "template": "{ndef_text}",
+   "output": "h%C3%A9llo+w%C3%B6rld+%E2%9C%93"
+  },
+  {
+   "id": "form_url_mod_no_double",
+   "context": "form",
+   "template": "{ndef_uri|url}",
+   "output": "https%3A%2F%2Ftappony.app%2Ft%2Fabc%3Fk%3D1%26x%3D2"
+  },
+  {
+   "id": "json_in_string",
+   "context": "json",
+   "template": "{\"p\": \"{payload}\"}",
+   "output": "{\"p\": \"Kitchen \\\"door\\\"\\n\\ttab\\\\slash\"}"
+  },
+  {
+   "id": "json_controls",
+   "context": "json",
+   "template": "{\"c\": \"{control}\"}",
+   "output": "{\"c\": \"a\\u0001b\\u001fc\\u0000d\"}"
+  },
+  {
+   "id": "json_hostile_in_string",
+   "context": "json",
+   "template": "{\"u\": \"{hostile_json}\"}",
+   "output": "{\"u\": \"\\\", \\\"admin\\\": true, \\\"x\\\": \\\"\"}"
+  },
+  {
+   "id": "json_number_outside",
+   "context": "json",
+   "template": "{\"n\": {seq}}",
+   "output": "{\"n\": 42}"
+  },
+  {
+   "id": "json_number_like_outside",
+   "context": "json",
+   "template": "{\"n\": {number_like}}",
+   "output": "{\"n\": -12.5e3}"
+  },
+  {
+   "id": "json_leading_zero_quoted",
+   "context": "json",
+   "template": "{\"n\": {leading_zero}}",
+   "output": "{\"n\": \"007\"}"
+  },
+  {
+   "id": "json_bool_outside",
+   "context": "json",
+   "template": "{\"r\": {random_uid}}",
+   "output": "{\"r\": false}"
+  },
+  {
+   "id": "json_empty_outside_null",
+   "context": "json",
+   "template": "{\"c\": {counter}}",
+   "output": "{\"c\": null}"
+  },
+  {
+   "id": "json_string_outside_quoted",
+   "context": "json",
+   "template": "{\"p\": {payload}}",
+   "output": "{\"p\": \"Kitchen \\\"door\\\"\\n\\ttab\\\\slash\"}"
+  },
+  {
+   "id": "json_hostile_outside_quoted",
+   "context": "json",
+   "template": "{\"u\": {hostile_json}}",
+   "output": "{\"u\": \"\\\", \\\"admin\\\": true, \\\"x\\\": \\\"\"}"
+  },
+  {
+   "id": "json_nested_braces",
+   "context": "json",
+   "template": "{\"a\":{\"b\":{\"c\":\"{uid}\"}}}",
+   "output": "{\"a\":{\"b\":{\"c\":\"04A27F1B5E8000\"}}}"
+  },
+  {
+   "id": "json_escaped_quote_in_literal",
+   "context": "json",
+   "template": "{\"k\\\"q\": \"{uid}\"}",
+   "output": "{\"k\\\"q\": \"04A27F1B5E8000\"}"
+  },
+  {
+   "id": "json_array",
+   "context": "json",
+   "template": "[{seq}, \"{uid}\", {chip}]",
+   "output": "[42, \"04A27F1B5E8000\", \"NTAG215\"]"
+  },
+  {
+   "id": "json_raw_breaks_is_error",
+   "context": "json",
+   "template": "{\"u\": {hostile_json|raw}}",
+   "error": "invalidJsonBody"
+  },
+  {
+   "id": "json_raw_valid_passes",
+   "context": "json",
+   "template": "{\"n\": {seq|raw}}",
+   "output": "{\"n\": 42}"
+  },
+  {
+   "id": "json_invalid_literal_is_error",
+   "context": "json",
+   "template": "{\"u\": \"{uid}\",}",
+   "error": "invalidJsonBody"
+  },
+  {
+   "id": "json_trailing_content_error",
+   "context": "json",
+   "template": "{\"u\": 1} x",
+   "error": "invalidJsonBody"
+  },
+  {
+   "id": "json_emoji_passthrough",
+   "context": "json",
+   "template": "{\"e\": \"{emoji}\"}",
+   "output": "{\"e\": \"🐴 tap\"}"
+  },
+  {
+   "id": "json_default_outside",
+   "context": "json",
+   "template": "{\"d\": {device_label|default:phone}}",
+   "output": "{\"d\": \"phone\"}"
+  },
+  {
+   "id": "json_unix_outside_number",
+   "context": "json",
+   "template": "{\"t\": {timestamp|unix}}",
+   "output": "{\"t\": 1790375405}"
+  },
+  {
+   "id": "raw_no_escaping",
+   "context": "raw",
+   "template": "{payload}",
+   "output": "Kitchen \"door\"\n\ttab\\slash"
+  }
+ ]
+}
