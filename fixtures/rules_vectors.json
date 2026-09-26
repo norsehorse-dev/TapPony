@@ -1,0 +1,635 @@
+{
+ "description": "Rules engine: routing a scan to profiles. PROFILE_SCHEMA.md section 14.",
+ "ruleset": {
+  "schema": 1,
+  "enabled": true,
+  "unmatched": "active",
+  "rules": [
+   {
+    "id": "R-OFF",
+    "name": "Disabled rule",
+    "enabled": false,
+    "match": {
+     "field": "uid",
+     "op": "prefix",
+     "value": "04"
+    },
+    "profiles": [
+     "P-NEVER"
+    ]
+   },
+   {
+    "id": "R-GARAGE",
+    "name": "Garage sticker",
+    "enabled": true,
+    "match": {
+     "field": "uid",
+     "op": "equals",
+     "value": "04:a2:7f:1b:5e:80:00"
+    },
+    "profiles": [
+     "P-HA",
+     "P-LOG",
+     "P-HA"
+    ]
+   },
+   {
+    "id": "R-DOOR",
+    "name": "Door tags",
+    "enabled": true,
+    "match": {
+     "field": "ndef_text",
+     "op": "contains",
+     "value": "DOOR"
+    },
+    "profiles": [
+     "P-HA"
+    ]
+   },
+   {
+    "id": "R-BADGE",
+    "name": "Office badges",
+    "enabled": true,
+    "match": {
+     "field": "tag_type",
+     "op": "equals",
+     "value": "mifare_desfire"
+    },
+    "profiles": [
+     "P-SIGNIN"
+    ]
+   },
+   {
+    "id": "R-BADREGEX",
+    "name": "Broken regex",
+    "enabled": true,
+    "match": {
+     "field": "payload",
+     "op": "regex",
+     "value": "(unclosed"
+    },
+    "profiles": [
+     "P-NEVER"
+    ]
+   },
+   {
+    "id": "R-SHELF",
+    "name": "Shelf labels",
+    "enabled": true,
+    "match": {
+     "field": "ndef_uri",
+     "op": "regex",
+     "value": "^https://inv\\.example\\.com/item/[0-9]+$"
+    },
+    "profiles": [
+     "P-INV"
+    ]
+   },
+   {
+    "id": "R-NXP",
+    "name": "Any NXP ICODE",
+    "enabled": true,
+    "match": {
+     "field": "uid",
+     "op": "prefix",
+     "value": "e0 04"
+    },
+    "profiles": [
+     "P-INV"
+    ]
+   },
+   {
+    "id": "R-EMPTY",
+    "name": "No profiles",
+    "enabled": true,
+    "match": {
+     "field": "chip",
+     "op": "contains",
+     "value": ""
+    },
+    "profiles": []
+   }
+  ]
+ },
+ "cases": [
+  {
+   "id": "uid_equals_normalized",
+   "variables": {
+    "uid": "04A27F1B5E8000",
+    "tag_type": "mifare_ultralight",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-HA",
+    "P-LOG"
+   ],
+   "expectRule": "R-GARAGE"
+  },
+  {
+   "id": "disabled_rule_skipped_then_contains",
+   "variables": {
+    "uid": "04112233445566",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "Front door",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-HA"
+   ],
+   "expectRule": "R-DOOR"
+  },
+  {
+   "id": "tag_type",
+   "variables": {
+    "uid": "08A1B2C3",
+    "tag_type": "mifare_desfire",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-SIGNIN"
+   ],
+   "expectRule": "R-BADGE"
+  },
+  {
+   "id": "regex_uri",
+   "variables": {
+    "uid": "04000000000001",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "https://inv.example.com/item/4411"
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-INV"
+   ],
+   "expectRule": "R-SHELF"
+  },
+  {
+   "id": "regex_no_match",
+   "variables": {
+    "uid": "04000000000001",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "https://inv.example.com/item/44x"
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-ACTIVE"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "uid_prefix_with_spaces",
+   "variables": {
+    "uid": "E004015012345678",
+    "tag_type": "iso15693",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-INV"
+   ],
+   "expectRule": "R-NXP"
+  },
+  {
+   "id": "unmatched_active",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-ACTIVE"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "unmatched_no_active",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": null,
+   "rules": null,
+   "expectProfiles": [],
+   "expectRule": null
+  },
+  {
+   "id": "unmatched_ignore",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": {
+    "schema": 1,
+    "enabled": true,
+    "unmatched": "ignore",
+    "rules": [
+     {
+      "id": "R-OFF",
+      "name": "Disabled rule",
+      "enabled": false,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "04"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-GARAGE",
+      "name": "Garage sticker",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "equals",
+       "value": "04:a2:7f:1b:5e:80:00"
+      },
+      "profiles": [
+       "P-HA",
+       "P-LOG",
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-DOOR",
+      "name": "Door tags",
+      "enabled": true,
+      "match": {
+       "field": "ndef_text",
+       "op": "contains",
+       "value": "DOOR"
+      },
+      "profiles": [
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-BADGE",
+      "name": "Office badges",
+      "enabled": true,
+      "match": {
+       "field": "tag_type",
+       "op": "equals",
+       "value": "mifare_desfire"
+      },
+      "profiles": [
+       "P-SIGNIN"
+      ]
+     },
+     {
+      "id": "R-BADREGEX",
+      "name": "Broken regex",
+      "enabled": true,
+      "match": {
+       "field": "payload",
+       "op": "regex",
+       "value": "(unclosed"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-SHELF",
+      "name": "Shelf labels",
+      "enabled": true,
+      "match": {
+       "field": "ndef_uri",
+       "op": "regex",
+       "value": "^https://inv\\.example\\.com/item/[0-9]+$"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-NXP",
+      "name": "Any NXP ICODE",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "e0 04"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-EMPTY",
+      "name": "No profiles",
+      "enabled": true,
+      "match": {
+       "field": "chip",
+       "op": "contains",
+       "value": ""
+      },
+      "profiles": []
+     }
+    ]
+   },
+   "expectProfiles": [],
+   "expectRule": null
+  },
+  {
+   "id": "rules_off_uses_active",
+   "variables": {
+    "uid": "04A27F1B5E8000",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": {
+    "schema": 1,
+    "enabled": false,
+    "unmatched": "active",
+    "rules": [
+     {
+      "id": "R-OFF",
+      "name": "Disabled rule",
+      "enabled": false,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "04"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-GARAGE",
+      "name": "Garage sticker",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "equals",
+       "value": "04:a2:7f:1b:5e:80:00"
+      },
+      "profiles": [
+       "P-HA",
+       "P-LOG",
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-DOOR",
+      "name": "Door tags",
+      "enabled": true,
+      "match": {
+       "field": "ndef_text",
+       "op": "contains",
+       "value": "DOOR"
+      },
+      "profiles": [
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-BADGE",
+      "name": "Office badges",
+      "enabled": true,
+      "match": {
+       "field": "tag_type",
+       "op": "equals",
+       "value": "mifare_desfire"
+      },
+      "profiles": [
+       "P-SIGNIN"
+      ]
+     },
+     {
+      "id": "R-BADREGEX",
+      "name": "Broken regex",
+      "enabled": true,
+      "match": {
+       "field": "payload",
+       "op": "regex",
+       "value": "(unclosed"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-SHELF",
+      "name": "Shelf labels",
+      "enabled": true,
+      "match": {
+       "field": "ndef_uri",
+       "op": "regex",
+       "value": "^https://inv\\.example\\.com/item/[0-9]+$"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-NXP",
+      "name": "Any NXP ICODE",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "e0 04"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-EMPTY",
+      "name": "No profiles",
+      "enabled": true,
+      "match": {
+       "field": "chip",
+       "op": "contains",
+       "value": ""
+      },
+      "profiles": []
+     }
+    ]
+   },
+   "expectProfiles": [
+    "P-ACTIVE"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "first_match_wins",
+   "variables": {
+    "uid": "04A27F1B5E8000",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "door",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-HA",
+    "P-LOG"
+   ],
+   "expectRule": "R-GARAGE"
+  },
+  {
+   "id": "case_insensitive_ascii",
+   "variables": {
+    "uid": "04000000000009",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "BACK DoOr",
+    "ndef_uri": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "expectProfiles": [
+    "P-HA"
+   ],
+   "expectRule": "R-DOOR"
+  }
+ ],
+ "errors": [
+  {
+   "id": "R-OFF",
+   "error": null
+  },
+  {
+   "id": "R-GARAGE",
+   "error": null
+  },
+  {
+   "id": "R-DOOR",
+   "error": null
+  },
+  {
+   "id": "R-BADGE",
+   "error": null
+  },
+  {
+   "id": "R-BADREGEX",
+   "error": "badRegex"
+  },
+  {
+   "id": "R-SHELF",
+   "error": null
+  },
+  {
+   "id": "R-NXP",
+   "error": null
+  },
+  {
+   "id": "R-EMPTY",
+   "error": "noProfiles"
+  }
+ ],
+ "extraErrors": [
+  {
+   "rule": {
+    "id": "X1",
+    "name": "",
+    "enabled": true,
+    "match": {
+     "field": "secret",
+     "op": "equals",
+     "value": ""
+    },
+    "profiles": [
+     "P"
+    ]
+   },
+   "error": "unknownField"
+  },
+  {
+   "rule": {
+    "id": "X2",
+    "name": "",
+    "enabled": true,
+    "match": {
+     "field": "uid",
+     "op": "startsWith",
+     "value": ""
+    },
+    "profiles": [
+     "P"
+    ]
+   },
+   "error": "unknownOp"
+  },
+  {
+   "rule": {
+    "id": "X3",
+    "name": "",
+    "enabled": true,
+    "match": {
+     "field": "uid",
+     "op": "regex",
+     "value": "[a-"
+    },
+    "profiles": [
+     "P"
+    ]
+   },
+   "error": "badRegex"
+  }
+ ],
+ "encoded": "{\"schema\":1,\"enabled\":true,\"unmatched\":\"active\",\"rules\":[{\"id\":\"R-OFF\",\"name\":\"Disabled rule\",\"enabled\":false,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"04\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-GARAGE\",\"name\":\"Garage sticker\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"equals\",\"value\":\"04:a2:7f:1b:5e:80:00\"},\"profiles\":[\"P-HA\",\"P-LOG\",\"P-HA\"]},{\"id\":\"R-DOOR\",\"name\":\"Door tags\",\"enabled\":true,\"match\":{\"field\":\"ndef_text\",\"op\":\"contains\",\"value\":\"DOOR\"},\"profiles\":[\"P-HA\"]},{\"id\":\"R-BADGE\",\"name\":\"Office badges\",\"enabled\":true,\"match\":{\"field\":\"tag_type\",\"op\":\"equals\",\"value\":\"mifare_desfire\"},\"profiles\":[\"P-SIGNIN\"]},{\"id\":\"R-BADREGEX\",\"name\":\"Broken regex\",\"enabled\":true,\"match\":{\"field\":\"payload\",\"op\":\"regex\",\"value\":\"(unclosed\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-SHELF\",\"name\":\"Shelf labels\",\"enabled\":true,\"match\":{\"field\":\"ndef_uri\",\"op\":\"regex\",\"value\":\"^https://inv\\\\.example\\\\.com/item/[0-9]+$\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-NXP\",\"name\":\"Any NXP ICODE\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"e0 04\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-EMPTY\",\"name\":\"No profiles\",\"enabled\":true,\"match\":{\"field\":\"chip\",\"op\":\"contains\",\"value\":\"\"},\"profiles\":[]}]}"
+}

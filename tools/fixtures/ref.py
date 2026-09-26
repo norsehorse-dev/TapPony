@@ -574,3 +574,67 @@ def csv_row(r):
 
 def csv_document(rows):
     return "\r\n".join([",".join(CSV_HEADER)] + [csv_row(r) for r in rows]) + "\r\n"
+
+# ---- rules -----------------------------------------------------------------------
+
+RULE_FIELDS = ["uid", "tag_type", "chip", "manufacturer", "payload", "ndef_text", "ndef_uri"]
+RULE_OPS = ["equals", "prefix", "contains", "regex"]
+
+def _norm_uid(s):
+    return ascii_upper(re.sub(r"[:\- ]", "", s))
+
+def rule_error(rule):
+    """None when valid, else a code: unknownField, unknownOp, badRegex, noProfiles."""
+    m = rule.get("match", {})
+    if m.get("field") not in RULE_FIELDS: return "unknownField"
+    if m.get("op") not in RULE_OPS: return "unknownOp"
+    if m.get("op") == "regex":
+        try: re.compile(m.get("value", ""))
+        except re.error: return "badRegex"
+    if not rule.get("profiles"): return "noProfiles"
+    return None
+
+def rule_matches(rule, variables):
+    if not rule.get("enabled", True) or rule_error(rule) is not None:
+        return False
+    m = rule["match"]
+    field, op, want = m["field"], m["op"], m.get("value", "")
+    have = variables.get(field, "")
+    if op == "regex":
+        return re.search(want, have) is not None
+    if field == "uid":
+        have, want = _norm_uid(have), _norm_uid(want)
+    else:
+        have, want = ascii_lower(have), ascii_lower(want)
+    if op == "equals": return have == want
+    if op == "prefix": return have.startswith(want)
+    return want in have
+
+def route(ruleset, variables, active_id):
+    """Returns (profile_ids, rule_id). rule_id None means no rule decided."""
+    fallback = [active_id] if active_id else []
+    if not ruleset.get("enabled", False):
+        return (fallback, None)
+    for r in ruleset.get("rules", []):
+        if rule_matches(r, variables):
+            seen, ids = set(), []
+            for p in r["profiles"]:
+                if p not in seen:
+                    seen.add(p); ids.append(p)
+            return (ids, r["id"])
+    if ruleset.get("unmatched", "active") == "ignore":
+        return ([], None)
+    return (fallback, None)
+
+# ---- result text -----------------------------------------------------------------
+
+def result_text(template, status, message, uid, profile):
+    """Custom success or failure text. None template -> None. Broken template -> shown as typed."""
+    if template is None or template == "":
+        return None
+    vars_ = {"status": "" if status is None else str(status), "message": message or "", "uid": uid, "profile": profile}
+    try:
+        out = render(template, "raw", vars_, {})
+    except TemplateError:
+        out = template
+    return out[:MESSAGE_CAP]

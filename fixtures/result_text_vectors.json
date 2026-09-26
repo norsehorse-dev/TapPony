@@ -1,0 +1,93 @@
+{
+ "description": "Custom success and failure text. PROFILE_SCHEMA.md section 15.",
+ "cases": [
+  {
+   "template": null,
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": null
+  },
+  {
+   "template": "",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": null
+  },
+  {
+   "template": "Logged",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Logged"
+  },
+  {
+   "template": "Checked in {uid|slice:10}",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Checked in 8000"
+  },
+  {
+   "template": "{message}",
+   "status": 200,
+   "message": "Checkpoint 4 of 9",
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Checkpoint 4 of 9"
+  },
+  {
+   "template": "Server said {status}: {message|default:nothing}",
+   "status": 503,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Server said 503: nothing"
+  },
+  {
+   "template": "No response ({status|default:offline})",
+   "status": null,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "No response (offline)"
+  },
+  {
+   "template": "{profile} done",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Front door done"
+  },
+  {
+   "template": "Oops {nope}",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Oops {nope}"
+  },
+  {
+   "template": "Oops {uid",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "Oops {uid"
+  },
+  {
+   "template": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+   "status": 200,
+   "message": null,
+   "uid": "04A27F1B5E8000",
+   "profile": "Front door",
+   "expect": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+ ]
+}

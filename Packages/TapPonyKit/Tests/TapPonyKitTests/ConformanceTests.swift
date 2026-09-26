@@ -182,7 +182,7 @@ final class ConformanceTests: XCTestCase {
     func testProfileEncodingIsStable() {
         let p = Presets.byKey("generic_get")!.create("ID")
         XCTAssertEqual(ProfileCodec.encode(p),
-            "{\"schema\":1,\"id\":\"ID\",\"name\":\"GET with query\",\"request\":{\"method\":\"GET\",\"url\":\"https://example.com/REPLACE_ME?uid={uid}&t={timestamp}\",\"headers\":[],\"body\":{\"type\":\"none\",\"template\":\"\",\"contentType\":null,\"fields\":[]},\"timeoutSeconds\":15,\"followRedirects\":false,\"allowLocalHttp\":false},\"auth\":{\"type\":\"none\"},\"signing\":{\"enabled\":false,\"secret\":null},\"tag\":{\"technologies\":[\"iso14443\",\"iso15693\",\"felica\"],\"extendedReads\":true,\"requireNdef\":false},\"after\":{\"messageField\":null,\"keepBodies\":false,\"sound\":true,\"haptic\":true,\"queueOffline\":false}}")
+            "{\"schema\":1,\"id\":\"ID\",\"name\":\"GET with query\",\"request\":{\"method\":\"GET\",\"url\":\"https://example.com/REPLACE_ME?uid={uid}&t={timestamp}\",\"headers\":[],\"body\":{\"type\":\"none\",\"template\":\"\",\"contentType\":null,\"fields\":[]},\"timeoutSeconds\":15,\"followRedirects\":false,\"allowLocalHttp\":false},\"auth\":{\"type\":\"none\"},\"signing\":{\"enabled\":false,\"secret\":null},\"tag\":{\"technologies\":[\"iso14443\",\"iso15693\",\"felica\"],\"extendedReads\":true,\"requireNdef\":false},\"after\":{\"messageField\":null,\"keepBodies\":false,\"sound\":true,\"haptic\":true,\"queueOffline\":false,\"successText\":null,\"failureText\":null,\"speak\":false}}")
     }
 
     func testResponseMessages() throws {
@@ -204,6 +204,38 @@ final class ConformanceTests: XCTestCase {
         XCTAssertEqual(HistoryCsv.document(rows), f["csv"]!.string!)
         for o in f["outcomes"]?.array ?? [] {
             XCTAssertEqual(HistoryCsv.outcome(buildError: o["buildError"]?.string, status: o["status"]?.int), o["outcome"]!.string!)
+        }
+    }
+
+    func testRules() throws {
+        let f = try fixture("rules_vectors.json")
+        let base = try Rules.fromJSON(f["ruleset"]!)
+        XCTAssertEqual(Rules.encode(base), f["encoded"]!.string!)
+        XCTAssertEqual(try Rules.decode(Rules.encode(base)), base)
+        for c in f["cases"]?.array ?? [] {
+            let set: RuleSet
+            if let r = c["rules"], !r.isNull { set = try Rules.fromJSON(r) } else { set = base }
+            let got = Rules.route(set, variables: strMap(c["variables"]), activeProfileId: c["activeProfileId"]?.string)
+            let id = c["id"]!.string!
+            XCTAssertEqual(got.profileIds, (c["expectProfiles"]?.array ?? []).compactMap { $0.string }, id)
+            XCTAssertEqual(got.ruleId, c["expectRule"]?.string, id)
+        }
+        let byId = Dictionary(uniqueKeysWithValues: base.rules.map { ($0.id, $0) })
+        for e in f["errors"]?.array ?? [] {
+            XCTAssertEqual(Rules.error(byId[e["id"]!.string!]!), e["error"]?.string, e["id"]!.string!)
+        }
+        for e in f["extraErrors"]?.array ?? [] {
+            let rule = try Rules.fromJSON(.object([JSONMember("rules", .array([e["rule"]!]))])).rules[0]
+            XCTAssertEqual(Rules.error(rule), e["error"]?.string)
+        }
+    }
+
+    func testResultText() throws {
+        let f = try fixture("result_text_vectors.json")
+        for c in f["cases"]?.array ?? [] {
+            let got = ResultText.render(c["template"]?.string, status: c["status"]?.int, message: c["message"]?.string,
+                                        uid: c["uid"]!.string!, profile: c["profile"]!.string!)
+            XCTAssertEqual(got, c["expect"]?.string, c["template"]?.string ?? "nil")
         }
     }
 }

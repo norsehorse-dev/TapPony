@@ -486,3 +486,82 @@ json.dump({"description": "History CSV export. PROFILE_SCHEMA.md section 12. RFC
                         {"buildError": None, "status": None, "outcome": "network_error"}, {"buildError": "x", "status": 200, "outcome": "not_sent"}]},
           open(os.path.join(OUT, "history_csv_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("messages", len(mcases), "csv rows", len(crows))
+
+# ---- rules -----------------------------------------------------------------------
+RULESET = {
+    "schema": 1, "enabled": True, "unmatched": "active",
+    "rules": [
+        {"id": "R-OFF", "name": "Disabled rule", "enabled": False,
+         "match": {"field": "uid", "op": "prefix", "value": "04"}, "profiles": ["P-NEVER"]},
+        {"id": "R-GARAGE", "name": "Garage sticker", "enabled": True,
+         "match": {"field": "uid", "op": "equals", "value": "04:a2:7f:1b:5e:80:00"}, "profiles": ["P-HA", "P-LOG", "P-HA"]},
+        {"id": "R-DOOR", "name": "Door tags", "enabled": True,
+         "match": {"field": "ndef_text", "op": "contains", "value": "DOOR"}, "profiles": ["P-HA"]},
+        {"id": "R-BADGE", "name": "Office badges", "enabled": True,
+         "match": {"field": "tag_type", "op": "equals", "value": "mifare_desfire"}, "profiles": ["P-SIGNIN"]},
+        {"id": "R-BADREGEX", "name": "Broken regex", "enabled": True,
+         "match": {"field": "payload", "op": "regex", "value": "(unclosed"}, "profiles": ["P-NEVER"]},
+        {"id": "R-SHELF", "name": "Shelf labels", "enabled": True,
+         "match": {"field": "ndef_uri", "op": "regex", "value": "^https://inv\\.example\\.com/item/[0-9]+$"}, "profiles": ["P-INV"]},
+        {"id": "R-NXP", "name": "Any NXP ICODE", "enabled": True,
+         "match": {"field": "uid", "op": "prefix", "value": "e0 04"}, "profiles": ["P-INV"]},
+        {"id": "R-EMPTY", "name": "No profiles", "enabled": True,
+         "match": {"field": "chip", "op": "contains", "value": ""}, "profiles": []},
+    ],
+}
+def tv(**kw):
+    base = {f: "" for f in ref.RULE_FIELDS}
+    base.update(kw)
+    return base
+rcases2 = []
+def rt(cid, variables, active, expect_ids, expect_rule, ruleset=RULESET):
+    got = ref.route(ruleset, variables, active)
+    assert got == (expect_ids, expect_rule), (cid, got)
+    rcases2.append({"id": cid, "variables": variables, "activeProfileId": active, "rules": None if ruleset is RULESET else ruleset,
+                    "expectProfiles": expect_ids, "expectRule": expect_rule})
+rt("uid_equals_normalized", tv(uid="04A27F1B5E8000", tag_type="mifare_ultralight"), "P-ACTIVE", ["P-HA", "P-LOG"], "R-GARAGE")
+rt("disabled_rule_skipped_then_contains", tv(uid="04112233445566", ndef_text="Front door"), "P-ACTIVE", ["P-HA"], "R-DOOR")
+rt("tag_type", tv(uid="08A1B2C3", tag_type="mifare_desfire"), "P-ACTIVE", ["P-SIGNIN"], "R-BADGE")
+rt("regex_uri", tv(uid="04000000000001", ndef_uri="https://inv.example.com/item/4411"), "P-ACTIVE", ["P-INV"], "R-SHELF")
+rt("regex_no_match", tv(uid="04000000000001", ndef_uri="https://inv.example.com/item/44x"), "P-ACTIVE", ["P-ACTIVE"], None)
+rt("uid_prefix_with_spaces", tv(uid="E004015012345678", tag_type="iso15693"), "P-ACTIVE", ["P-INV"], "R-NXP")
+rt("unmatched_active", tv(uid="0266A1B2C3D4E5"), "P-ACTIVE", ["P-ACTIVE"], None)
+rt("unmatched_no_active", tv(uid="0266A1B2C3D4E5"), None, [], None)
+rt("unmatched_ignore", tv(uid="0266A1B2C3D4E5"), "P-ACTIVE", [], None, ruleset=dict(RULESET, unmatched="ignore"))
+rt("rules_off_uses_active", tv(uid="04A27F1B5E8000"), "P-ACTIVE", ["P-ACTIVE"], None, ruleset=dict(RULESET, enabled=False))
+rt("first_match_wins", tv(uid="04A27F1B5E8000", ndef_text="door"), "P-ACTIVE", ["P-HA", "P-LOG"], "R-GARAGE")
+rt("case_insensitive_ascii", tv(uid="04000000000009", ndef_text="BACK DoOr"), "P-ACTIVE", ["P-HA"], "R-DOOR")
+errs = [{"id": r["id"], "error": ref.rule_error(r)} for r in RULESET["rules"]]
+assert {e["id"]: e["error"] for e in errs} == {"R-OFF": None, "R-GARAGE": None, "R-DOOR": None, "R-BADGE": None, "R-BADREGEX": "badRegex",
+                                              "R-SHELF": None, "R-NXP": None, "R-EMPTY": "noProfiles"}
+extra_errs = [
+    {"rule": {"id": "X1", "name": "", "enabled": True, "match": {"field": "secret", "op": "equals", "value": ""}, "profiles": ["P"]}, "error": "unknownField"},
+    {"rule": {"id": "X2", "name": "", "enabled": True, "match": {"field": "uid", "op": "startsWith", "value": ""}, "profiles": ["P"]}, "error": "unknownOp"},
+    {"rule": {"id": "X3", "name": "", "enabled": True, "match": {"field": "uid", "op": "regex", "value": "[a-"}, "profiles": ["P"]}, "error": "badRegex"},
+]
+for e in extra_errs: assert ref.rule_error(e["rule"]) == e["error"]
+json.dump({"description": "Rules engine: routing a scan to profiles. PROFILE_SCHEMA.md section 14.",
+           "ruleset": RULESET, "cases": rcases2, "errors": errs, "extraErrors": extra_errs,
+           "encoded": json.dumps(RULESET, separators=(",", ":"), ensure_ascii=False)},
+          open(os.path.join(OUT, "rules_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+# ---- result text -----------------------------------------------------------------
+tcases2 = []
+def rtext(template, status, message, expect):
+    got = ref.result_text(template, status, message, "04A27F1B5E8000", "Front door")
+    assert got == expect, (template, got)
+    tcases2.append({"template": template, "status": status, "message": message, "uid": "04A27F1B5E8000", "profile": "Front door", "expect": expect})
+rtext(None, 200, None, None)
+rtext("", 200, None, None)
+rtext("Logged", 200, None, "Logged")
+rtext("Checked in {uid|slice:10}", 200, None, "Checked in 8000")
+rtext("{message}", 200, "Checkpoint 4 of 9", "Checkpoint 4 of 9")
+rtext("Server said {status}: {message|default:nothing}", 503, None, "Server said 503: nothing")
+rtext("No response ({status|default:offline})", None, None, "No response (offline)")
+rtext("{profile} done", 200, None, "Front door done")
+rtext("Oops {nope}", 200, None, "Oops {nope}")
+rtext("Oops {uid", 200, None, "Oops {uid")
+rtext("x" * 250, 200, None, "x" * 200)
+json.dump({"description": "Custom success and failure text. PROFILE_SCHEMA.md section 15.", "cases": tcases2},
+          open(os.path.join(OUT, "result_text_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("rules", len(rcases2), "result text", len(tcases2))

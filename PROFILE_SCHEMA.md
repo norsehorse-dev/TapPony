@@ -41,7 +41,10 @@ Profiles are JSON documents, one per file, stored in the app container. The on-d
     "keepBodies": false,
     "sound": true,
     "haptic": true,
-    "queueOffline": false
+    "queueOffline": false,
+    "successText": null,
+    "failureText": null,
+    "speak": false
   }
 }
 ```
@@ -62,6 +65,8 @@ Field rules:
 - `signing`: HMAC-SHA256 per section 6, `secret` names the key.
 - `tag.technologies`: any of `iso14443`, `iso15693`, `felica`, `iso7816`.
 - `after.messageField`: `null`, `json:<dotted.path>` (a field of a JSON response), or `header:<Name>`.
+- `after.successText`, `after.failureText`: optional text shown instead of the plain "HTTP 200" line, and spoken when `speak` is on (section 15).
+- `after.speak`: default false. Reads the result aloud after each scan, for hands-free rounds.
 - `after.queueOffline`: default false. When true, a scan whose request got no HTTP response (offline, DNS failure, timeout) is saved on the device and sent later, in scan order, when a connection is back (section 13).
 - Unknown fields are ignored on read, so an older build opens a profile written by a newer one with the same schema number.
 
@@ -220,4 +225,42 @@ When `after.queueOffline` is on and a send ends with no HTTP response, the scan 
 - Items go out oldest first. The first item that still gets no response stops the run; the rest wait for the next attempt.
 - Any HTTP response, success or not, ends an item and writes it to history with its original scan time. So does a build error (for example, a secret deleted in the meantime), logged as `not_sent`.
 - An item still unsent 24 hours after its scan is dropped and logged as `network_error`. An item whose profile was deleted is dropped and logged as `not_sent`.
+
+## 14. Rules
+
+Rules route each scan to one or more profiles by what the tag is, so one phone can serve the garage sticker, the shelf labels and the office badges without switching profiles. They live in their own document, `rules.json`, beside the profiles:
+
+```json
+{
+  "schema": 1,
+  "enabled": true,
+  "unmatched": "active",
+  "rules": [
+    {
+      "id": "R-GARAGE",
+      "name": "Garage sticker",
+      "enabled": true,
+      "match": { "field": "uid", "op": "equals", "value": "04:A2:7F:1B:5E:80:00" },
+      "profiles": ["<profile id>", "<profile id>"]
+    }
+  ]
+}
+```
+
+- `enabled` false means rules are ignored and every scan goes to the active profile, as before.
+- `match.field` is one of `uid`, `tag_type`, `chip`, `manufacturer`, `payload`, `ndef_text`, `ndef_uri`, read from the scan's variables.
+- `match.op` is `equals`, `prefix`, `contains` or `regex`.
+  - For `uid`, both sides drop `:`, `-` and spaces and compare in uppercase, so a UID copied in any common form matches.
+  - Other fields compare with ASCII case folding.
+  - `regex` searches anywhere in the value, case-sensitive, and should stick to the common subset (character classes like `[0-9]`, anchors, alternation, quantifiers) so both platforms agree. Only `\n` counts as a line end (for `$` and `.`), and an empty pattern matches everything. An invalid pattern means the rule never matches, and the editor flags it.
+- Rules are tried in order. The first enabled, valid rule that matches decides, and every profile it lists receives the scan (fan-out). A profile listed twice gets it once. A rule with no profiles is invalid.
+- When nothing matches, `unmatched` decides: `active` sends to the active profile, and `ignore` sends nothing and says so on the Scan screen.
+- The tag is read once, with chip details on if any candidate profile wants them. Each profile then gets its own request, `{seq}`, history row and result.
+- The encoded document uses exactly the key order shown, compact JSON.
+
+## 15. Result text and speech
+
+`after.successText` is used after a 2xx response, and `after.failureText` after anything else, including no response and not sent. Each is a template (sections 3 to 5) rendered in raw context with just four variables: `{status}` (empty without a response), `{message}` (section 11, empty when none), `{uid}`, and `{profile}`. A template that fails to parse or names another variable is shown exactly as typed. The result is cut to 200 code points.
+
+With `after.speak` on, the app speaks the result text if there is one, otherwise the server message, otherwise a short localized "Sent" or "Failed". Speech is at most 200 code points and is never HTML or a link.
 

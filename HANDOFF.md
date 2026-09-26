@@ -57,3 +57,10 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
 - **Design calls:** a live scan with a connection is sent immediately even while older scans wait in the queue, so a receiver can get them out of order. Use `{timestamp}` and `{seq}` to reorder.
 - **Next in Phase C:** the rules engine (tag-to-profile routing, a new cross-platform spec and fixtures) and response rules with spoken confirmation.
 
+## Phase C part 2 (Sep 25, 2026, Android)
+
+- **Rules engine:** spec section 14, both cores, `rules_vectors.json` (12 routing cases, validation, and a pinned encoding). Rules match on UID (separator- and case-insensitive), tag type, chip, maker, content, NDEF text, or NDEF link, using is, starts with, contains, or a pattern. The first match wins and fans out to every profile it lists. With no match, the scan goes to the Scan-screen profile or nowhere, as chosen. Android keeps rules in `rules.json` and edits them on a Rules screen reached from Profiles, with reordering and "Use last scanned tag".
+- **Result text and speech:** spec section 15, `after.successText`, `after.failureText` and `after.speak` in both cores, `result_text_vectors.json`. Android shows the text large on the result card and speaks the result with the phone's own text-to-speech.
+- **Kotlin core:** 14 of 14 conformance tests green in the cloud. Swift twins written; `swift test` still to run.
+- **Still open for Phase C:** the iOS side of all of Phase B and C (history, reply message, queue, rules, speech, Shortcuts "Scan and Send", Control Center), after the stickers confirm iPhone reads.
+

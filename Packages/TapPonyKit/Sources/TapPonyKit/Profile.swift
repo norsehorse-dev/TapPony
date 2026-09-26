@@ -93,9 +93,13 @@ public struct AfterSpec: Equatable {
     public var sound: Bool = true
     public var haptic: Bool = true
     public var queueOffline: Bool = false
-    public init(messageField: String? = nil, keepBodies: Bool = false, sound: Bool = true, haptic: Bool = true, queueOffline: Bool = false) {
+    public var successText: String? = nil
+    public var failureText: String? = nil
+    public var speak: Bool = false
+    public init(messageField: String? = nil, keepBodies: Bool = false, sound: Bool = true, haptic: Bool = true, queueOffline: Bool = false,
+                successText: String? = nil, failureText: String? = nil, speak: Bool = false) {
         self.messageField = messageField; self.keepBodies = keepBodies; self.sound = sound; self.haptic = haptic
-        self.queueOffline = queueOffline
+        self.queueOffline = queueOffline; self.successText = successText; self.failureText = failureText; self.speak = speak
     }
 }
 
@@ -114,7 +118,7 @@ public enum ProfileCodec {
 
     /// Kotlin's `(x as? Number)?.toInt()`: any JSON number, Long narrowed by
     /// truncating bits, Double truncated toward zero and saturated, NaN as 0.
-    private static func numberToInt(_ v: JSONValue?) -> Int? {
+    static func numberToInt(_ v: JSONValue?) -> Int? {
         switch v {
         case .int(let i)?: return Int(Int32(truncatingIfNeeded: i))
         case .double(let d)?:
@@ -180,7 +184,10 @@ public enum ProfileCodec {
                 keepBodies: af?["keepBodies"]?.bool ?? false,
                 sound: af?["sound"]?.bool ?? true,
                 haptic: af?["haptic"]?.bool ?? true,
-                queueOffline: af?["queueOffline"]?.bool ?? false
+                queueOffline: af?["queueOffline"]?.bool ?? false,
+                successText: af?["successText"]?.string,
+                failureText: af?["failureText"]?.string,
+                speak: af?["speak"]?.bool ?? false
             )
         )
         p.schema = schema
@@ -234,6 +241,9 @@ public enum ProfileCodec {
                 JSONMember("sound", .bool(p.after.sound)),
                 JSONMember("haptic", .bool(p.after.haptic)),
                 JSONMember("queueOffline", .bool(p.after.queueOffline)),
+                JSONMember("successText", str(p.after.successText)),
+                JSONMember("failureText", str(p.after.failureText)),
+                JSONMember("speak", .bool(p.after.speak)),
             ])),
         ])
     }
