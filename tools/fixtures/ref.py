@@ -504,3 +504,73 @@ def build_request(profile, variables, secrets, send_unix):
         headers.append(["X-TapPony-Nonce", variables["nonce"]])
         headers.append(["X-TapPony-Signature", sign(key, ts, body or "")])
     return {"method": method, "url": url, "headers": headers, "body": body}
+
+# ---- response message ----------------------------------------------------------
+
+MESSAGE_CAP = 200
+
+def compact(v):
+    return json.dumps(v, separators=(",", ":"), ensure_ascii=False)
+
+def extract_message(field, headers, body):
+    """PROFILE_SCHEMA.md section 11. headers: list of [name, value]. Returns str or None."""
+    if not field:
+        return None
+    if field.startswith("header:"):
+        name = field[len("header:"):].lower()
+        for n, v in headers:
+            if n.lower() == name:
+                return v[:MESSAGE_CAP]
+        return None
+    if field.startswith("json:"):
+        path = field[len("json:"):]
+        if body is None or not valid_json(body):
+            return None
+        cur = json.loads(body)
+        if path:
+            for seg in path.split("."):
+                if isinstance(cur, dict) and seg in cur:
+                    cur = cur[seg]
+                elif isinstance(cur, list) and re.fullmatch(r"(0|[1-9][0-9]*)", seg) and int(seg) < len(cur):
+                    cur = cur[int(seg)]
+                else:
+                    return None
+        if cur is None:
+            return None
+        if isinstance(cur, str):
+            out = cur
+        elif isinstance(cur, bool):
+            out = "true" if cur else "false"
+        elif isinstance(cur, int):
+            out = str(cur)
+        elif isinstance(cur, float):
+            out = str(int(cur)) if cur == int(cur) and abs(cur) < 1e15 else repr(cur)
+        else:
+            out = compact(cur)
+        return out[:MESSAGE_CAP]
+    return None
+
+# ---- history CSV -----------------------------------------------------------------
+
+CSV_HEADER = ["time", "profile", "uid", "chip", "tag_type", "outcome", "status", "latency_ms", "error"]
+
+def outcome_of(build_error, status):
+    if build_error: return "not_sent"
+    if status is None: return "network_error"
+    return "ok" if 200 <= status <= 299 else "http_error"
+
+def csv_field(s):
+    if s and s[0] in "=+-@\t\r":
+        s = "'" + s
+    if any(c in s for c in ',"\r\n') or (s != s.strip(" ")):
+        s = '"' + s.replace('"', '""') + '"'
+    return s
+
+def csv_row(r):
+    vals = [iso_utc(r["timeMs"]), r["profile"], r["uid"], r["chip"], r["tagType"], r["outcome"],
+            "" if r.get("status") is None else str(r["status"]),
+            "" if r.get("latencyMs") is None else str(r["latencyMs"]), r.get("error") or ""]
+    return ",".join(csv_field(v) for v in vals)
+
+def csv_document(rows):
+    return "\r\n".join([",".join(CSV_HEADER)] + [csv_row(r) for r in rows]) + "\r\n"

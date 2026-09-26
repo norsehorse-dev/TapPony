@@ -41,3 +41,10 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
 2. Hardware spike, one evening, both phones: NTAG213/215/216, Ultralight EV1, a MIFARE Classic 1K fob, DESFire EV1 and EV3 (one in random-ID mode), ICODE SLIX. For each tag, record UID bytes and order on both platforms and append them to `fixtures/uid_vectors.json` under `hardware`.
 3. Confirm the Read NFC Tag action returns its value to a running shortcut (the plan's Phase A check).
 4. Then Phase B: history (SwiftData / Room), the Test view polish, response message extraction, and error copy for every read state.
+
+## Phase B progress (Sep 25, 2026, Android first while tags are in the mail)
+
+- **Both cores:** response message extraction (`after.messageField`, PROFILE_SCHEMA.md section 11) and history CSV export (section 12), with new fixtures `message_vectors.json` (23 cases) and `history_csv_vectors.json`. Kotlin: 12 of 12 conformance tests green in the cloud. Swift: twins written; run `swift test` to confirm.
+- **Android:** Room history (bodies kept only when the profile opts in, secrets masked, secrets echoed by a server masked too), History tab with All / OK / Failed filters, detail view, Export CSV through the share sheet, Clear. Retention in Settings: 7, 30 (default), 90, 365 days, or until the 1,000-scan cap. The server message shows on the Scan result, and the editor has an "After sending" section (Show from the reply, Keep bodies).
+- **iOS app:** not yet wired to history or the server message. That comes after the NTAG215 stickers confirm iPhone reads.
+- **Known difference:** non-integer JSON numbers in a server message can print differently on each platform (Kotlin `1.5E-5`, Swift `1.5e-05`). The spec allows platform shortest form; integers and simple decimals match.

@@ -1,0 +1,83 @@
+{
+ "description": "History CSV export. PROFILE_SCHEMA.md section 12. RFC 4180 with CRLF, spreadsheet-formula neutralization.",
+ "rows": [
+  {
+   "timeMs": 1790375405123,
+   "profile": "Front door",
+   "uid": "04A27F1B5E8000",
+   "chip": "NTAG215",
+   "tagType": "mifare_ultralight",
+   "outcome": "ok",
+   "status": 200,
+   "latencyMs": 88,
+   "error": ""
+  },
+  {
+   "timeMs": 1790375406000,
+   "profile": "Log, \"quoted\" name",
+   "uid": "E004015012345678",
+   "chip": "",
+   "tagType": "iso15693",
+   "outcome": "http_error",
+   "status": 503,
+   "latencyMs": 1204,
+   "error": ""
+  },
+  {
+   "timeMs": 1790375407999,
+   "profile": "=HYPERLINK(\"x\")",
+   "uid": "",
+   "chip": "",
+   "tagType": "unknown",
+   "outcome": "not_sent",
+   "status": null,
+   "latencyMs": null,
+   "error": "hostPolicy:plainHttpPublic"
+  },
+  {
+   "timeMs": 1790375408000,
+   "profile": " padded ",
+   "uid": "08A1B2C3",
+   "chip": "DESFire EV3",
+   "tagType": "mifare_desfire",
+   "outcome": "network_error",
+   "status": null,
+   "latencyMs": 15000,
+   "error": "SocketTimeoutException: timeout\nline2"
+  },
+  {
+   "timeMs": 1790375409000,
+   "profile": "-5 degrees",
+   "uid": "0114B3A2C1D0E0F0",
+   "chip": "",
+   "tagType": "felica",
+   "outcome": "ok",
+   "status": 204,
+   "latencyMs": 40,
+   "error": ""
+  }
+ ],
+ "csv": "time,profile,uid,chip,tag_type,outcome,status,latency_ms,error\r\n2026-09-25T22:30:05.123Z,Front door,04A27F1B5E8000,NTAG215,mifare_ultralight,ok,200,88,\r\n2026-09-25T22:30:06.000Z,\"Log, \"\"quoted\"\" name\",E004015012345678,,iso15693,http_error,503,1204,\r\n2026-09-25T22:30:07.999Z,\"'=HYPERLINK(\"\"x\"\")\",,,unknown,not_sent,,,hostPolicy:plainHttpPublic\r\n2026-09-25T22:30:08.000Z,\" padded \",08A1B2C3,DESFire EV3,mifare_desfire,network_error,,15000,\"SocketTimeoutException: timeout\nline2\"\r\n2026-09-25T22:30:09.000Z,'-5 degrees,0114B3A2C1D0E0F0,,felica,ok,204,40,\r\n",
+ "outcomes": [
+  {
+   "buildError": null,
+   "status": 200,
+   "outcome": "ok"
+  },
+  {
+   "buildError": null,
+   "status": 404,
+   "outcome": "http_error"
+  },
+  {
+   "buildError": null,
+   "status": null,
+   "outcome": "network_error"
+  },
+  {
+   "buildError": "x",
+   "status": 200,
+   "outcome": "not_sent"
+  }
+ ]
+}

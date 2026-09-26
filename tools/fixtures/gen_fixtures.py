@@ -425,3 +425,64 @@ json.dump({"description": "Request builder vectors. Variables are variables_vect
            "variables": BASE_VARS, "secrets": RSECRETS, "cases": rcases},
           open(os.path.join(OUT, "request_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 print("vars", len(vcases), "requests", len(rcases))
+
+# ---- response message ------------------------------------------------------------
+BODY = json.dumps({"ok": True, "message": "Checkpoint 4 of 9", "count": 12, "ratio": 2.5,
+                   "data": {"items": [{"name": "first"}, {"name": "second"}], "empty": None},
+                   "nested": {"a": [1, 2], "b": "x"}, "long": "y" * 250, "unicode": "héllo ✓"},
+                  ensure_ascii=False)
+HEADERS = [["Content-Type", "application/json"], ["X-Result", "Logged row 17"], ["x-result", "second"]]
+mcases = []
+def msg(field, expect, body=BODY, headers=HEADERS):
+    got = ref.extract_message(field, headers, body)
+    assert got == expect, (field, got, expect)
+    mcases.append({"field": field, "body": body, "headers": headers, "expect": expect})
+msg(None, None)
+msg("", None)
+msg("json:message", "Checkpoint 4 of 9")
+msg("json:count", "12")
+msg("json:ratio", "2.5")
+msg("json:ok", "true")
+msg("json:data.items.1.name", "second")
+msg("json:data.items.5.name", None)
+msg("json:data.items.01.name", None)
+msg("json:data.empty", None)
+msg("json:nested", '{"a":[1,2],"b":"x"}')
+msg("json:nested.a", "[1,2]")
+msg("json:missing", None)
+msg("json:long", "y" * 200)
+msg("json:unicode", "héllo ✓")
+msg("json:", json.dumps(json.loads(BODY), separators=(",", ":"), ensure_ascii=False)[:200])
+msg("json:message", None, body="not json")
+msg("json:message", None, body=None)
+msg("json:0", "a", body='["a","b"]')
+msg("header:X-Result", "Logged row 17")
+msg("header:x-RESULT", "Logged row 17")
+msg("header:X-Missing", None)
+msg("bogus:thing", None)
+json.dump({"description": "Response message extraction. PROFILE_SCHEMA.md section 11.", "cases": mcases},
+          open(os.path.join(OUT, "message_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+# ---- history CSV -----------------------------------------------------------------
+crows = [
+    {"timeMs": 1790375405123, "profile": "Front door", "uid": "04A27F1B5E8000", "chip": "NTAG215", "tagType": "mifare_ultralight",
+     "outcome": ref.outcome_of(None, 200), "status": 200, "latencyMs": 88, "error": ""},
+    {"timeMs": 1790375406000, "profile": "Log, \"quoted\" name", "uid": "E004015012345678", "chip": "", "tagType": "iso15693",
+     "outcome": ref.outcome_of(None, 503), "status": 503, "latencyMs": 1204, "error": ""},
+    {"timeMs": 1790375407999, "profile": "=HYPERLINK(\"x\")", "uid": "", "chip": "", "tagType": "unknown",
+     "outcome": ref.outcome_of("hostPolicy:plainHttpPublic", None), "status": None, "latencyMs": None, "error": "hostPolicy:plainHttpPublic"},
+    {"timeMs": 1790375408000, "profile": " padded ", "uid": "08A1B2C3", "chip": "DESFire EV3", "tagType": "mifare_desfire",
+     "outcome": ref.outcome_of(None, None), "status": None, "latencyMs": 15000, "error": "SocketTimeoutException: timeout\nline2"},
+    {"timeMs": 1790375409000, "profile": "-5 degrees", "uid": "0114B3A2C1D0E0F0", "chip": "", "tagType": "felica",
+     "outcome": "ok", "status": 204, "latencyMs": 40, "error": ""},
+]
+doc = ref.csv_document(crows)
+assert doc.startswith("time,profile,uid,chip,tag_type,outcome,status,latency_ms,error\r\n")
+assert "\"Log, \"\"quoted\"\" name\"" in doc and "\"'=HYPERLINK(\"\"x\"\")\"" in doc and "\" padded \"" in doc and ",'-5 degrees," in doc
+assert [ref.outcome_of(None, 200), ref.outcome_of(None, 404), ref.outcome_of(None, None), ref.outcome_of("x", 200)] == ["ok", "http_error", "network_error", "not_sent"]
+json.dump({"description": "History CSV export. PROFILE_SCHEMA.md section 12. RFC 4180 with CRLF, spreadsheet-formula neutralization.",
+           "rows": crows, "csv": doc,
+           "outcomes": [{"buildError": None, "status": 200, "outcome": "ok"}, {"buildError": None, "status": 404, "outcome": "http_error"},
+                        {"buildError": None, "status": None, "outcome": "network_error"}, {"buildError": "x", "status": 200, "outcome": "not_sent"}]},
+          open(os.path.join(OUT, "history_csv_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("messages", len(mcases), "csv rows", len(crows))

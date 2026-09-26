@@ -184,4 +184,26 @@ final class ConformanceTests: XCTestCase {
         XCTAssertEqual(ProfileCodec.encode(p),
             "{\"schema\":1,\"id\":\"ID\",\"name\":\"GET with query\",\"request\":{\"method\":\"GET\",\"url\":\"https://example.com/REPLACE_ME?uid={uid}&t={timestamp}\",\"headers\":[],\"body\":{\"type\":\"none\",\"template\":\"\",\"contentType\":null,\"fields\":[]},\"timeoutSeconds\":15,\"followRedirects\":false,\"allowLocalHttp\":false},\"auth\":{\"type\":\"none\"},\"signing\":{\"enabled\":false,\"secret\":null},\"tag\":{\"technologies\":[\"iso14443\",\"iso15693\",\"felica\"],\"extendedReads\":true,\"requireNdef\":false},\"after\":{\"messageField\":null,\"keepBodies\":false,\"sound\":true,\"haptic\":true}}")
     }
+
+    func testResponseMessages() throws {
+        let f = try fixture("message_vectors.json")
+        for c in f["cases"]?.array ?? [] {
+            let headers = (c["headers"]?.array ?? []).map { ($0.array![0].string!, $0.array![1].string!) }
+            let got = ResponseMessage.extract(field: c["field"]?.string, headers: headers, body: c["body"]?.string)
+            XCTAssertEqual(got, c["expect"]?.string, c["field"]?.string ?? "nil")
+        }
+    }
+
+    func testHistoryCsv() throws {
+        let f = try fixture("history_csv_vectors.json")
+        let rows = (f["rows"]?.array ?? []).map { r in
+            HistoryRow(timeMs: Int64(r["timeMs"]!.int!), profile: r["profile"]!.string!, uid: r["uid"]!.string!,
+                       chip: r["chip"]!.string!, tagType: r["tagType"]!.string!, outcome: r["outcome"]!.string!,
+                       status: r["status"]?.int, latencyMs: r["latencyMs"]?.int.map { Int64($0) }, error: r["error"]?.string ?? "")
+        }
+        XCTAssertEqual(HistoryCsv.document(rows), f["csv"]!.string!)
+        for o in f["outcomes"]?.array ?? [] {
+            XCTAssertEqual(HistoryCsv.outcome(buildError: o["buildError"]?.string, status: o["status"]?.int), o["outcome"]!.string!)
+        }
+    }
 }

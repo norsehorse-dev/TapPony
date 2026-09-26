@@ -184,3 +184,27 @@ Errors are reported as `hostPolicy:<reason>`, `urlTemplate:<reason>`, `template:
 - `{token}`: the `k` query parameter of `{ndef_uri}` when it is an `https://tappony.app/t/...` launch link, otherwise empty.
 - `{idm}` is the UID for FeliCa and empty otherwise; `{pupi}` is the UID for ISO 14443-B and empty otherwise.
 - Hex-valued variables (`signature`, `atqa`, `sak`, `dsfid`, `afi`, `pmm`, `system_code`, `historical_bytes`, `application_data`) are uppercase with no separators.
+
+## 11. Response message
+
+`after.messageField` picks one piece of the server's reply to show on the Scan screen (and, later, to speak aloud):
+
+- `null` or empty: nothing.
+- `header:<Name>`: the first response header with that name, compared case-insensitively.
+- `json:<path>`: the response body parsed as strict JSON, then walked by `.`-separated segments. A segment names an object member, or indexes an array when it is a plain non-negative integer with no leading zero. `json:` with an empty path means the whole body.
+- The value found becomes text: a string as-is, `true`/`false`, an integer without a decimal point, other numbers in the platform's shortest form, and objects or arrays as compact JSON with keys in the order the server sent them. JSON `null`, a missing member, an out-of-range index, or a body that is not valid JSON all mean no message.
+- The result is cut to 200 code points. It is shown as plain text, never rendered or followed.
+
+## 12. History CSV
+
+History exports as RFC 4180 CSV with CRLF line endings, one header row, then one row per scan, oldest first:
+
+```
+time,profile,uid,chip,tag_type,outcome,status,latency_ms,error
+```
+
+- `time` is the scan time in the `{timestamp}` format. `status` and `latency_ms` are empty when there was no HTTP response.
+- `outcome` is `not_sent` when the request was never built (host policy, template, or secret error), `network_error` when it was built but no HTTP response came back, `ok` for 2xx, and `http_error` for any other status.
+- A field starting with `=`, `+`, `-`, `@`, tab, or CR gets a leading `'` so spreadsheet apps don't run it as a formula. Profile names and error text can come from anywhere.
+- A field is quoted when it contains a comma, a double quote, CR, or LF, or starts or ends with a space. Quotes inside are doubled.
+- Request and response bodies are never exported, even when a profile keeps them.
