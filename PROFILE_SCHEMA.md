@@ -40,7 +40,8 @@ Profiles are JSON documents, one per file, stored in the app container. The on-d
     "messageField": null,
     "keepBodies": false,
     "sound": true,
-    "haptic": true
+    "haptic": true,
+    "queueOffline": false
   }
 }
 ```
@@ -61,6 +62,7 @@ Field rules:
 - `signing`: HMAC-SHA256 per section 6, `secret` names the key.
 - `tag.technologies`: any of `iso14443`, `iso15693`, `felica`, `iso7816`.
 - `after.messageField`: `null`, `json:<dotted.path>` (a field of a JSON response), or `header:<Name>`.
+- `after.queueOffline`: default false. When true, a scan whose request got no HTTP response (offline, DNS failure, timeout) is saved on the device and sent later, in scan order, when a connection is back (section 13).
 - Unknown fields are ignored on read, so an older build opens a profile written by a newer one with the same schema number.
 
 ## 2. Variables
@@ -208,3 +210,14 @@ time,profile,uid,chip,tag_type,outcome,status,latency_ms,error
 - A field starting with `=`, `+`, `-`, `@`, tab, or CR gets a leading `'` so spreadsheet apps don't run it as a formula. Profile names and error text can come from anywhere.
 - A field is quoted when it contains a comma, a double quote, CR, or LF, or starts or ends with a space. Quotes inside are doubled.
 - Request and response bodies are never exported, even when a profile keeps them.
+
+## 13. Offline queue
+
+When `after.queueOffline` is on and a send ends with no HTTP response, the scan is queued instead of logged as a network error.
+
+- The queue stores the profile id and the scan's variables, never the rendered request, so no secret is written to the queue. The request is rebuilt from the current profile and secrets when it is finally sent.
+- On resend, `{sent_at}` and the signing timestamp are the real send time. `{timestamp}`, `{seq}`, and `{nonce}` keep their scan-time values, so a receiver can drop a duplicate if an earlier attempt did arrive before the connection failed.
+- Items go out oldest first. The first item that still gets no response stops the run; the rest wait for the next attempt.
+- Any HTTP response, success or not, ends an item and writes it to history with its original scan time. So does a build error (for example, a secret deleted in the meantime), logged as `not_sent`.
+- An item still unsent 24 hours after its scan is dropped and logged as `network_error`. An item whose profile was deleted is dropped and logged as `not_sent`.
+

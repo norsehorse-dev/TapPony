@@ -92,8 +92,10 @@ public struct AfterSpec: Equatable {
     public var keepBodies: Bool = false
     public var sound: Bool = true
     public var haptic: Bool = true
-    public init(messageField: String? = nil, keepBodies: Bool = false, sound: Bool = true, haptic: Bool = true) {
+    public var queueOffline: Bool = false
+    public init(messageField: String? = nil, keepBodies: Bool = false, sound: Bool = true, haptic: Bool = true, queueOffline: Bool = false) {
         self.messageField = messageField; self.keepBodies = keepBodies; self.sound = sound; self.haptic = haptic
+        self.queueOffline = queueOffline
     }
 }
 
@@ -177,7 +179,8 @@ public enum ProfileCodec {
                 messageField: af?["messageField"]?.string,
                 keepBodies: af?["keepBodies"]?.bool ?? false,
                 sound: af?["sound"]?.bool ?? true,
-                haptic: af?["haptic"]?.bool ?? true
+                haptic: af?["haptic"]?.bool ?? true,
+                queueOffline: af?["queueOffline"]?.bool ?? false
             )
         )
         p.schema = schema
@@ -230,6 +233,7 @@ public enum ProfileCodec {
                 JSONMember("keepBodies", .bool(p.after.keepBodies)),
                 JSONMember("sound", .bool(p.after.sound)),
                 JSONMember("haptic", .bool(p.after.haptic)),
+                JSONMember("queueOffline", .bool(p.after.queueOffline)),
             ])),
         ])
     }

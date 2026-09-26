@@ -48,3 +48,12 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
 - **Android:** Room history (bodies kept only when the profile opts in, secrets masked, secrets echoed by a server masked too), History tab with All / OK / Failed filters, detail view, Export CSV through the share sheet, Clear. Retention in Settings: 7, 30 (default), 90, 365 days, or until the 1,000-scan cap. The server message shows on the Scan result, and the editor has an "After sending" section (Show from the reply, Keep bodies).
 - **iOS app:** not yet wired to history or the server message. That comes after the NTAG215 stickers confirm iPhone reads.
 - **Known difference:** non-integer JSON numbers in a server message can print differently on each platform (Kotlin `1.5E-5`, Swift `1.5e-05`). The spec allows platform shortest form; integers and simple decimals match.
+
+## Phase C part 1 (Sep 25, 2026, Android)
+
+- **Offline queue:** per-profile "Save and send later when offline" (`after.queueOffline`, spec section 13, in both cores). Only transport failures queue (no connection, DNS, timeout), never bad URLs or build errors. The queue stores variables, not rendered requests, so secrets never reach it. WorkManager flushes it oldest first when a network is back, and also on app start and from "Send now" on the Scan screen. Items older than 24 hours are dropped into history as `network_error`. Room is now at DB version 2, with a real migration, so existing history survives.
+- **Batch mode:** a Batch chip on the Scan screen gives a running count and a per-tag result list. "Each tag once per batch" is in Settings, on by default. Sounds and a vibration on every read follow the profile's sound and haptic switches.
+- **Entry points:** a `tappony://scan?profile=<id>` link for other apps, launcher long-press shortcuts for up to four profiles, "Add to home screen" in the editor, and a Quick Settings tile that opens TapPony on the Scan tab. Android only reads tags with an app in the foreground, so these save taps rather than scanning in the background.
+- **Design calls:** a live scan with a connection is sent immediately even while older scans wait in the queue, so a receiver can get them out of order. Use `{timestamp}` and `{seq}` to reorder.
+- **Next in Phase C:** the rules engine (tag-to-profile routing, a new cross-platform spec and fixtures) and response rules with spoken confirmation.
+

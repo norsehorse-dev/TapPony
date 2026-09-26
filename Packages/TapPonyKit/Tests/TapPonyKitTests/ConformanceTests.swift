@@ -182,7 +182,7 @@ final class ConformanceTests: XCTestCase {
     func testProfileEncodingIsStable() {
         let p = Presets.byKey("generic_get")!.create("ID")
         XCTAssertEqual(ProfileCodec.encode(p),
-            "{\"schema\":1,\"id\":\"ID\",\"name\":\"GET with query\",\"request\":{\"method\":\"GET\",\"url\":\"https://example.com/REPLACE_ME?uid={uid}&t={timestamp}\",\"headers\":[],\"body\":{\"type\":\"none\",\"template\":\"\",\"contentType\":null,\"fields\":[]},\"timeoutSeconds\":15,\"followRedirects\":false,\"allowLocalHttp\":false},\"auth\":{\"type\":\"none\"},\"signing\":{\"enabled\":false,\"secret\":null},\"tag\":{\"technologies\":[\"iso14443\",\"iso15693\",\"felica\"],\"extendedReads\":true,\"requireNdef\":false},\"after\":{\"messageField\":null,\"keepBodies\":false,\"sound\":true,\"haptic\":true}}")
+            "{\"schema\":1,\"id\":\"ID\",\"name\":\"GET with query\",\"request\":{\"method\":\"GET\",\"url\":\"https://example.com/REPLACE_ME?uid={uid}&t={timestamp}\",\"headers\":[],\"body\":{\"type\":\"none\",\"template\":\"\",\"contentType\":null,\"fields\":[]},\"timeoutSeconds\":15,\"followRedirects\":false,\"allowLocalHttp\":false},\"auth\":{\"type\":\"none\"},\"signing\":{\"enabled\":false,\"secret\":null},\"tag\":{\"technologies\":[\"iso14443\",\"iso15693\",\"felica\"],\"extendedReads\":true,\"requireNdef\":false},\"after\":{\"messageField\":null,\"keepBodies\":false,\"sound\":true,\"haptic\":true,\"queueOffline\":false}}")
     }
 
     func testResponseMessages() throws {
