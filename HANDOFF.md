@@ -64,3 +64,30 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
 - **Kotlin core:** 14 of 14 conformance tests green in the cloud. Swift twins written; `swift test` still to run.
 - **Still open for Phase C:** the iOS side of all of Phase B and C (history, reply message, queue, rules, speech, Shortcuts "Scan and Send", Control Center), after the stickers confirm iPhone reads.
 
+
+## Hardware check and iOS catch-up (Sep 26, 2026)
+
+- **Hardware check passed:** the same NTAG215 sticker reads on both phones with the same UID and chip. The iPhone Read NFC Tag shortcut returns the UID, and `swift test` is green. Phase A is closed. The UID bytes still need to go into `fixtures/uid_vectors.json` under `hardware`.
+- **iOS now matches Android for Phases B and C.** Source only, first compile on the Mac:
+  - **History:** SQLite in Application Support (`history.sqlite`, the `history` and `queue` tables use the same columns as Android's Room database), a History tab with filters, a detail sheet, CSV export through the share sheet, and Clear. The 1,000-entry cap and the retention setting are applied on every write.
+  - **Reply and results:** the reply message and the success/failure text on the result card. Secrets are masked in response bodies, errors, headers and result text. Sound uses the system ACK/NACK tones. The haptic reports the result, because Core NFC already vibrates on the read itself. Speech uses `AVSpeechSynthesizer`.
+  - **Offline queue:** same rules as Android. It flushes when the app becomes active, when `NWPathMonitor` sees the network come back while the app is running, after any send that got a response, and on Send now. There is no `BGAppRefreshTask`, because the plan allows no background modes, so a queued scan waits until TapPony is next open.
+  - **Batch mode:** `restartPolling()` after each tag. A new session starts when the system ends one at 60 seconds. A tag held in place is reported once. "Each tag once per batch" is in Settings. The count and the last result show on the NFC sheet.
+  - **Rules:** `rules.json`, a Rules screen reached from Profiles (reorder with Edit, swipe to delete, "Use last scanned tag"), and routing with fan-out to several profiles.
+  - **Entry points:**
+    - `tappony://scan?profile=<id>` opens the Scan tab and starts a read. The profile editor has "Copy scan link".
+    - Shortcuts has **Scan and Send**, with an optional profile. It returns sent, status, message, result text, UID and queued.
+    - A new `TapPonyWidgets` extension holds a Control Center / Action button control and a Home Screen and Lock Screen widget. All of them open `tappony://scan` through `OpenURLIntent`.
+- **Review fixes (both platforms where noted):**
+  - Secrets echoed back percent-encoded or form-encoded are now masked too (iOS and Android).
+  - An ATS refusal isn't queued, and `*.home.arpa` gets an ATS exception to match the host policy.
+  - The iOS queue retries with backoff while the app is open (30 seconds, doubling up to 10 minutes). A kick that arrives mid-flush runs another flush afterwards, and a failed database write can no longer drop a queued scan.
+  - Speech ducks other audio and plays even when the phone is on silent.
+  - Scan and Send ends a running batch and refuses to start while another read is in progress.
+  - A batch stops by itself after three sessions in a row with no tag, which is about three minutes idle.
+- **Check on device:**
+  - The control opens TapPony through the custom scheme. If it doesn't, move `OpenScanIntent` into both targets with `openAppWhenRun`.
+  - A tag left on the phone during batch mode is sent only once.
+  - `header:Name` messages: iOS merges repeated headers with ", ", while Android takes the first.
+- **Deferred:** a per-profile Control Center control. Its profile picker runs in the extension and would need an App Group to share the profile list. For now, the control uses the active profile, the same as the Android tile.
+- **First build on the Mac:** `xcodegen generate` now creates two targets. Automatic signing registers `com.tappony.app.widgets` on first build. After installing, add the control from Control Center's edit mode.

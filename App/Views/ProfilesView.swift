@@ -3,12 +3,23 @@ import TapPonyKit
 
 struct ProfilesView: View {
     @EnvironmentObject private var profiles: ProfileStore
+    @EnvironmentObject private var rules: RulesStore
     @State private var picking = false
     @State private var path: [String] = []
 
     var body: some View {
         NavigationStack(path: $path) {
             List {
+                Section {
+                    NavigationLink {
+                        RulesView()
+                    } label: {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Rules").font(.headline)
+                            Text(rulesStatus).font(.footnote).foregroundStyle(.secondary)
+                        }
+                    }
+                }
                 if profiles.profiles.isEmpty {
                     Text("No profiles yet. Tap + to start from a preset.").foregroundStyle(.secondary)
                 }
@@ -40,6 +51,14 @@ struct ProfilesView: View {
                 }
             }
         }
+    }
+}
+
+extension ProfilesView {
+    fileprivate var rulesStatus: String {
+        let set = rules.current
+        guard set.enabled else { return String(localized: "Off. Every scan goes to the profile picked on the Scan tab.") }
+        return set.rules.count == 1 ? String(localized: "On, 1 rule") : String(localized: "On, \(set.rules.count) rules")
     }
 }
 

@@ -80,8 +80,14 @@ struct ReadNFCTagIntent: AppIntent {
 struct TapPonyShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
+            intent: ScanAndSendIntent(),
+            phrases: ["Scan and send with \(.applicationName)", "Scan a tag with \(.applicationName)"],
+            shortTitle: "Scan and Send",
+            systemImageName: "paperplane"
+        )
+        AppShortcut(
             intent: ReadNFCTagIntent(),
-            phrases: ["Read an NFC tag with \(.applicationName)", "Scan a tag with \(.applicationName)"],
+            phrases: ["Read an NFC tag with \(.applicationName)"],
             shortTitle: "Read NFC Tag",
             systemImageName: "wave.3.right"
         )

@@ -10,15 +10,25 @@ final class ProfileStore: ObservableObject {
     private let dir: URL
 
     init() {
-        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        dir = base.appendingPathComponent("profiles", isDirectory: true)
+        dir = Self.directory
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         reload()
     }
 
     func reload() {
+        profiles = Self.load(from: dir)
+    }
+
+    nonisolated static var directory: URL {
+        FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("profiles", isDirectory: true)
+    }
+
+    /// Reads every profile file. Nonisolated so App Intents queries can list
+    /// profiles without waiting for the main actor.
+    nonisolated static func load(from dir: URL = ProfileStore.directory) -> [Profile] {
         let files = (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)) ?? []
-        profiles = files.filter { $0.pathExtension == "json" }
+        return files.filter { $0.pathExtension == "json" }
             .compactMap { try? ProfileCodec.decode(String(decoding: Data(contentsOf: $0), as: UTF8.self)) }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
@@ -114,10 +124,20 @@ final class AppSettings: ObservableObject {
     @Published var activeProfileId: String? {
         didSet { d.set(activeProfileId, forKey: "active_profile") }
     }
+    /// Days of history to keep; 0 keeps entries until the 1,000-entry cap.
+    @Published var historyDays: Int {
+        didSet { d.set(historyDays, forKey: "history_days") }
+    }
+    /// In batch mode, skip a tag already sent in the current batch.
+    @Published var oncePerBatch: Bool {
+        didSet { d.set(oncePerBatch, forKey: "once_per_batch") }
+    }
 
     init() {
         deviceLabel = d.string(forKey: "device_label") ?? ""
         activeProfileId = d.string(forKey: "active_profile")
+        historyDays = d.object(forKey: "history_days") as? Int ?? 30
+        oncePerBatch = d.object(forKey: "once_per_batch") as? Bool ?? true
     }
 
     func nextSeq(_ profileId: String) -> Int64 {
@@ -125,5 +145,29 @@ final class AppSettings: ObservableObject {
         let n = Int64(d.integer(forKey: k)) + 1
         d.set(Int(n), forKey: k)
         return n
+    }
+}
+
+/// rules.json beside the profiles (PROFILE_SCHEMA.md section 14).
+@MainActor
+final class RulesStore: ObservableObject {
+    @Published private(set) var current: RuleSet
+    private let url: URL
+
+    init() {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
+        url = base.appendingPathComponent("rules.json")
+        current = Self.load(url)
+    }
+
+    nonisolated static func load(_ url: URL) -> RuleSet {
+        guard let data = try? Data(contentsOf: url) else { return RuleSet() }
+        return (try? Rules.decode(String(decoding: data, as: UTF8.self))) ?? RuleSet()
+    }
+
+    func save(_ set: RuleSet) {
+        current = set
+        try? Data(Rules.encode(set).utf8).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
 }

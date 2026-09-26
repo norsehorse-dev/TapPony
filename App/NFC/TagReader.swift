@@ -1,6 +1,7 @@
 import CoreNFC
 import Foundation
 import TapPonyKit
+import UIKit
 
 /// Why a read ended without a tag. The Scan tab has its own copy for each.
 enum TagReadError: Error, Equatable {
@@ -225,6 +226,189 @@ final class CoreNFCTagReader: NSObject, TagReader, NFCTagReaderSessionDelegate {
               let message = try? await t.readNDEF() else { return [] }
         return message.records.map {
             NdefRecord(tnf: Int($0.typeNameFormat.rawValue), type: [UInt8]($0.type), id: [UInt8]($0.identifier), payload: [UInt8]($0.payload))
+        }
+    }
+}
+
+/// Batch mode: one Core NFC session after another, tag after tag, until the
+/// user stops. After each tag the session restarts polling instead of closing;
+/// when the system ends a session at its 60-second limit, the next one begins
+/// at once. A tag held against the phone is only reported once, however many
+/// times polling finds it again.
+@MainActor
+final class BatchTagReader: NSObject, NFCTagReaderSessionDelegate {
+
+    /// Called for every new tag, on the main actor.
+    var onTag: ((TagReading) -> Void)?
+    /// Called once when the batch ends on its own (Cancel on the sheet, NFC unavailable).
+    var onEnd: ((TagReadError) -> Void)?
+
+    private(set) var active = false
+    private var session: NFCTagReaderSession?
+    private var polling: NFCTagReaderSession.PollingOption = [.iso14443]
+    private var extendedReads = true
+    private var alert = ""
+    private var lastKey: String?
+    private var lastSeen = Date.distantPast
+    private var fakeTask: Task<Void, Never>?
+    /// Changes on every start and stop, so a restart scheduled for an earlier run never fires in a later one.
+    private var runToken = 0
+    /// Session restarts in a row that ended without reading a tag.
+    private var emptyRestarts = 0
+
+    /// Same-UID reads closer together than this are one tag held in place.
+    /// Polling restarts about once a second, so a held tag keeps refreshing it.
+    private static let holdWindow: TimeInterval = 3
+    private static let maxEmptyRestarts = 3
+
+    func start(technologies: [String], extendedReads: Bool, alert: String) {
+        guard !active else { return }
+        var p: NFCTagReaderSession.PollingOption = []
+        if technologies.contains("iso14443") || technologies.contains("iso7816") { p.insert(.iso14443) }
+        if technologies.contains("iso15693") { p.insert(.iso15693) }
+        if technologies.contains("felica") { p.insert(.iso18092) }
+        polling = p.isEmpty ? [.iso14443] : p
+        self.extendedReads = extendedReads
+        self.alert = alert
+        lastKey = nil
+        emptyRestarts = 0
+        runToken += 1
+        active = true
+        #if targetEnvironment(simulator)
+        fakeTask = Task { [weak self] in
+            var n: UInt8 = 0
+            while !Task.isCancelled {
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                guard let self, self.active else { return }
+                n &+= 1
+                var r = TagReading(family: .mifare, tagType: "mifare_ultralight", identifier: [0x04, 0xA2, 0x7F, 0x1B, 0x5E, 0x80, n])
+                r.chip = "NTAG215"
+                self.onTag?(r)
+            }
+        }
+        #else
+        guard NFCTagReaderSession.readingAvailable else {
+            active = false
+            onEnd?(.unavailable)
+            return
+        }
+        begin()
+        #endif
+    }
+
+    /// Ends the batch from the app side. No onEnd callback.
+    func stop() {
+        guard active else { return }
+        active = false
+        runToken += 1
+        fakeTask?.cancel()
+        fakeTask = nil
+        let s = session
+        session = nil
+        s?.invalidate()
+    }
+
+    func setAlert(_ text: String) {
+        alert = text
+        session?.alertMessage = text
+    }
+
+    private func begin() {
+        // Typed optional, like CoreNFCTagReader: compiles whether or not the SDK imports this init as failable.
+        let created: NFCTagReaderSession? = active ? NFCTagReaderSession(pollingOption: polling, delegate: self, queue: .main) : nil
+        guard active, let s = created else {
+            if active {
+                active = false
+                onEnd?(.unavailable)
+            }
+            return
+        }
+        s.alertMessage = alert
+        session = s
+        s.begin()
+    }
+
+    private func end(_ e: TagReadError) {
+        guard active else { return }
+        active = false
+        session = nil
+        onEnd?(e)
+    }
+
+    // MARK: NFCTagReaderSessionDelegate (delivered on the main queue)
+
+    nonisolated func tagReaderSessionDidBecomeActive(_ session: NFCTagReaderSession) {}
+
+    nonisolated func tagReaderSession(_ session: NFCTagReaderSession, didInvalidateWithError error: Error) {
+        let code = (error as? NFCReaderError)?.code
+        MainActor.assumeIsolated {
+            guard session === self.session else { return }
+            self.session = nil
+            switch code {
+            case .readerSessionInvalidationErrorSessionTimeout?, .readerSessionInvalidationErrorSessionTerminatedUnexpectedly?:
+                // A timeout is the normal 60-second end; start the next session. Stop instead if the app
+                // left the foreground or sessions keep dying without a single tag.
+                self.emptyRestarts += 1
+                guard UIApplication.shared.applicationState == .active, self.emptyRestarts <= Self.maxEmptyRestarts else {
+                    self.end(.timeout)
+                    return
+                }
+                let token = self.runToken
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(nanoseconds: 300_000_000)
+                    guard let self, self.runToken == token else { return }
+                    self.begin()
+                }
+            case .readerSessionInvalidationErrorUserCanceled?:
+                self.end(.cancelled)
+            case .readerSessionInvalidationErrorSystemIsBusy?:
+                self.end(.systemBusy)
+            default:
+                self.end(.other(error.localizedDescription))
+            }
+        }
+    }
+
+    nonisolated func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
+        MainActor.assumeIsolated {
+            guard session === self.session, self.active else { return }
+            if tags.count > 1 {
+                session.alertMessage = String(localized: "More than one tag. Hold just one.")
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(nanoseconds: 500_000_000)
+                    guard let self, self.active, session === self.session else { return }
+                    session.alertMessage = self.alert
+                    session.restartPolling()
+                }
+                return
+            }
+            guard let tag = tags.first else { return }
+            let extended = self.extendedReads
+            Task { @MainActor [weak self] in
+                var reading: TagReading?
+                do {
+                    try await session.connect(to: tag)
+                    reading = try await CoreNFCTagReader.reading(from: tag, extended: extended)
+                } catch {
+                    reading = nil
+                }
+                guard let self, self.active, session === self.session else { return }
+                if let r = reading {
+                    self.emptyRestarts = 0
+                    // A random-ID tag shows a new UID on every read, so any random-ID read inside the
+                    // window counts as the same tag held in place.
+                    let random = r.identifier.count == 4 && r.identifier.first == 0x08
+                    let key = random ? "random" : Encoding.hexLower(r.identifier)
+                    let now = Date()
+                    let held = key == self.lastKey && now.timeIntervalSince(self.lastSeen) < Self.holdWindow
+                    self.lastKey = key
+                    self.lastSeen = now
+                    if !held { self.onTag?(r) }
+                }
+                try? await Task.sleep(nanoseconds: 800_000_000)
+                guard self.active, session === self.session else { return }
+                session.restartPolling()
+            }
         }
     }
 }

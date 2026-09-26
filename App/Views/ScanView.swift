@@ -5,10 +5,9 @@ struct ScanView: View {
     @EnvironmentObject private var model: AppModel
     @EnvironmentObject private var profiles: ProfileStore
     @EnvironmentObject private var settings: AppSettings
-
-    @State private var busy = false
-    @State private var outcome: ScanOutcome?
-    @State private var readError: TagReadError?
+    @EnvironmentObject private var rules: RulesStore
+    @EnvironmentObject private var queue: OfflineQueue
+    @EnvironmentObject private var scanner: ScanController
 
     var body: some View {
         NavigationStack {
@@ -20,33 +19,84 @@ struct ScanView: View {
                     } else if profiles.profiles.isEmpty {
                         Notice(text: String(localized: "Create a profile first. A profile says where each scan gets sent."))
                     }
-                    Button(action: scan) {
+                    batchBar
+                    if queue.count > 0 {
+                        HStack {
+                            Text("\(queue.count) waiting to send").foregroundStyle(Palette.warn)
+                            Spacer()
+                            Button(queue.flushing ? String(localized: "Sending…") : String(localized: "Send now")) {
+                                scanner.sendQueuedNow()
+                            }
+                            .disabled(queue.flushing)
+                        }
+                        .padding()
+                        .background(Palette.surface, in: RoundedRectangle(cornerRadius: 12))
+                    }
+                    Button(action: tapScan) {
                         VStack(spacing: 14) {
                             if busy {
                                 ProgressView().controlSize(.large)
                             } else {
-                                Image(systemName: "wave.3.right.circle.fill").font(.system(size: 88)).foregroundStyle(Palette.blue)
+                                Image(systemName: scanner.batchOn ? "stop.circle.fill" : "wave.3.right.circle.fill")
+                                    .font(.system(size: 88)).foregroundStyle(Palette.blue)
                             }
-                            Text(busy ? "Working…" : "Scan a tag").font(.title3.weight(.semibold))
+                            Text(buttonTitle).font(.title3.weight(.semibold))
+                            if scanner.batchOn && scanner.skippedRepeats > 0 {
+                                Text("\(scanner.skippedRepeats) repeat taps skipped").foregroundStyle(.secondary)
+                            }
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 40)
                         .background(Palette.surface, in: RoundedRectangle(cornerRadius: 16))
                     }
                     .buttonStyle(.plain)
-                    .disabled(busy || model.activeProfile == nil || !TagReaders.isAvailable)
+                    .disabled(!scanner.batchOn && (scanner.reading || !scanner.canScan))
 
-                    if let e = readError, let text = message(for: e) {
+                    if case .failed(let e) = scanner.state, let text = message(for: e) {
                         Notice(text: text)
                     }
-                    if let o = outcome {
-                        ResultCard(outcome: o)
+                    if scanner.batchOn || !scanner.batchResults.isEmpty {
+                        ForEach(scanner.batchResults) { BatchRow(outcome: $0) }
+                    } else if case .done(let outcomes) = scanner.state {
+                        ForEach(outcomes) { ResultCard(outcome: $0) }
                     }
                 }
                 .padding()
             }
             .background(Palette.charcoal)
             .navigationTitle("TapPony")
+        }
+    }
+
+    private var busy: Bool {
+        if scanner.batchOn { return false }
+        if scanner.reading { return true }
+        if case .sending = scanner.state { return true }
+        return false
+    }
+
+    private var buttonTitle: String {
+        if scanner.batchOn { return String(localized: "Stop batch") }
+        if busy { return String(localized: "Working…") }
+        return String(localized: "Scan a tag")
+    }
+
+    private func tapScan() {
+        if scanner.batchOn { scanner.setBatch(false) } else { scanner.scan() }
+    }
+
+    private var batchBar: some View {
+        HStack {
+            Toggle("Batch", isOn: Binding(get: { scanner.batchOn }, set: { scanner.setBatch($0) }))
+                .toggleStyle(.button)
+                .disabled(!scanner.batchOn && (scanner.reading || !scanner.canScan))
+            if scanner.batchOn || scanner.batchCount > 0 {
+                Text("\(scanner.batchCount) scanned").foregroundStyle(.secondary)
+                Spacer()
+                Button("New batch") { scanner.newBatch() }
+            } else {
+                Spacer()
+            }
         }
     }
 
@@ -57,7 +107,12 @@ struct ScanView: View {
             }
         } label: {
             HStack {
-                Text(model.activeProfile?.name ?? String(localized: "No profile"))
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(model.activeProfile?.name ?? String(localized: "No profile"))
+                    if rules.current.enabled {
+                        Text("Rules on: the tag picks the profile").font(.caption).foregroundStyle(.secondary)
+                    }
+                }
                 Spacer()
                 Image(systemName: "chevron.up.chevron.down")
             }
@@ -67,30 +122,6 @@ struct ScanView: View {
         .disabled(profiles.profiles.isEmpty)
     }
 
-    private func scan() {
-        guard let p = model.activeProfile else { return }
-        busy = true
-        readError = nil
-        Task {
-            defer { busy = false }
-            do {
-                let reading = try await TagReaders.default().read(
-                    technologies: p.tag.technologies, extendedReads: p.tag.extendedReads,
-                    alert: String(localized: "Hold near the tag"))
-                let scanTime = Int64(Date().timeIntervalSince1970 * 1000)
-                if p.tag.requireNdef && reading.ndef.isEmpty {
-                    readError = .other("noNdef")
-                    return
-                }
-                outcome = await model.engine.run(p, reading: reading, scanTimeMs: scanTime)
-            } catch let e as TagReadError {
-                readError = e
-            } catch {
-                readError = .other(error.localizedDescription)
-            }
-        }
-    }
-
     private func message(for e: TagReadError) -> String? {
         switch e {
         case .cancelled, .timeout: return nil
@@ -98,9 +129,38 @@ struct ScanView: View {
         case .systemBusy: return String(localized: "The system is busy with another NFC session. Try again in a moment.")
         case .moved: return String(localized: "The tag moved away before it was fully read. Hold it still and try again.")
         case .unsupported: return String(localized: "This tag type isn't supported. iPhone can't read MIFARE Classic badges.")
-        case .other(let s) where s == "noNdef": return String(localized: "This profile needs a tag with NDEF content, and this tag has none.")
-        case .other(let s): return s
+        case .other(let s):
+            if let f = ScanFailure(rawValue: s) { return ScanController.failureText(f) }
+            return s
         }
+    }
+}
+
+struct BatchRow: View {
+    let outcome: ScanOutcome
+
+    var body: some View {
+        HStack {
+            Text(outcome.uid.isEmpty ? "?" : outcome.uid).font(.system(.body, design: .monospaced))
+            Spacer()
+            if let t = outcome.resultText ?? outcome.message {
+                Text(t).foregroundStyle(.secondary).lineLimit(1)
+            }
+            Text(label).foregroundStyle(color)
+        }
+        .padding(.horizontal)
+    }
+
+    private var label: String {
+        if outcome.queued { return String(localized: "Queued") }
+        if outcome.buildError != nil { return String(localized: "Not sent") }
+        if let s = outcome.result?.status { return "HTTP \(s)" }
+        return String(localized: "Network error")
+    }
+
+    private var color: Color {
+        if outcome.queued { return Palette.warn }
+        return outcome.result?.ok == true ? Palette.ok : Palette.fail
     }
 }
 
@@ -120,12 +180,20 @@ struct ResultCard: View {
 
     var body: some View {
         let r = outcome.result
-        let color: Color = outcome.buildError != nil ? Palette.fail : (r == nil ? .secondary : (r!.ok ? Palette.ok : Palette.fail))
+        let color: Color = outcome.queued ? Palette.warn
+            : outcome.buildError != nil ? Palette.fail
+            : (r == nil ? .secondary : (r!.ok ? Palette.ok : Palette.fail))
         VStack(alignment: .leading, spacing: 6) {
             HStack {
                 Text(headline).font(.headline).foregroundStyle(color)
                 Spacer()
                 if let ms = r?.latencyMs { Text("\(ms) ms").foregroundStyle(.secondary) }
+            }
+            if let t = outcome.resultText {
+                Text(t).font(.title2.weight(.semibold)).foregroundStyle(color)
+            }
+            if let m = outcome.message, m != outcome.resultText {
+                Text(m).font(.title3)
             }
             Text(outcome.profileName).foregroundStyle(.secondary)
             if !outcome.uid.isEmpty { Text(outcome.uid).font(.system(.body, design: .monospaced)) }
@@ -147,6 +215,7 @@ struct ResultCard: View {
     }
 
     private var headline: String {
+        if outcome.queued { return String(localized: "Saved, sends when back online") }
         if outcome.buildError != nil { return String(localized: "Not sent") }
         if let s = outcome.result?.status { return "HTTP \(s)" }
         return String(localized: "Network error")
