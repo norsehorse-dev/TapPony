@@ -577,7 +577,7 @@ def csv_document(rows):
 
 # ---- rules -----------------------------------------------------------------------
 
-RULE_FIELDS = ["uid", "tag_type", "chip", "manufacturer", "payload", "ndef_text", "ndef_uri"]
+RULE_FIELDS = ["uid", "tag_type", "chip", "manufacturer", "payload", "ndef_text", "ndef_uri", "tag_label"]
 RULE_OPS = ["equals", "prefix", "contains", "regex"]
 
 def _norm_uid(s):
@@ -610,9 +610,13 @@ def rule_matches(rule, variables):
     if op == "prefix": return have.startswith(want)
     return want in have
 
-def route(ruleset, variables, active_id):
-    """Returns (profile_ids, rule_id). rule_id None means no rule decided."""
+def route(ruleset, variables, active_id, tag_profile=None):
+    """Returns (profile_ids, rule_id). rule_id None means no rule decided.
+    tag_profile is the scanned tag's default profile from the registry (section 16):
+    it beats the active profile and the unmatched setting, but a matching rule beats it."""
     fallback = [active_id] if active_id else []
+    if tag_profile:
+        fallback = [tag_profile]
     if not ruleset.get("enabled", False):
         return (fallback, None)
     for r in ruleset.get("rules", []):
@@ -622,9 +626,51 @@ def route(ruleset, variables, active_id):
                 if p not in seen:
                     seen.add(p); ids.append(p)
             return (ids, r["id"])
-    if ruleset.get("unmatched", "active") == "ignore":
+    if ruleset.get("unmatched", "active") == "ignore" and not tag_profile:
         return ([], None)
     return (fallback, None)
+
+# ---- tags registry and launch links (section 16) ----------------------------------
+
+LAUNCH_PREFIX = "https://tappony.app/t/?k="
+
+def launch_token(raw16):
+    """Base64url of 16 random bytes, no padding: 22 characters."""
+    assert len(raw16) == 16
+    return base64.urlsafe_b64encode(raw16).decode().rstrip("=")
+
+def launch_link(token):
+    return LAUNCH_PREFIX + token
+
+def is_launch_token(t):
+    return re.fullmatch(r"[A-Za-z0-9_-]{16,64}", t or "") is not None
+
+def tags_decode(doc):
+    """Lenient reader: unknown keys ignored, missing ones defaulted, non-object entries dropped."""
+    if doc.get("schema", 1) > 1: raise ValueError("newerSchema")
+    out = []
+    for t in doc.get("tags", []):
+        if not isinstance(t, dict): continue
+        prof = t.get("profile")
+        out.append({"uid": _norm_uid(t.get("uid") or ""), "label": t.get("label") or "", "notes": t.get("notes") or "",
+                    "profile": prof if isinstance(prof, str) and prof else None, "token": t.get("token") or ""})
+    return {"schema": 1, "tags": out}
+
+def tags_encode(reg):
+    return json.dumps({"schema": 1, "tags": [{"uid": t["uid"], "label": t["label"], "notes": t["notes"],
+                                              "profile": t["profile"], "token": t["token"]} for t in reg["tags"]]},
+                      separators=(",", ":"), ensure_ascii=False)
+
+def tags_find(reg, uid, token, random_uid=False):
+    """Token first (it names the tag even when the UID can't), then the UID unless it's random."""
+    if token:
+        for t in reg["tags"]:
+            if t["token"] and t["token"] == token: return t
+    u = _norm_uid(uid or "")
+    if u and not random_uid:
+        for t in reg["tags"]:
+            if t["uid"] and t["uid"] == u: return t
+    return None
 
 # ---- result text -----------------------------------------------------------------
 

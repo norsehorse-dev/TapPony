@@ -99,7 +99,9 @@ struct ScanAndSendIntent: AppIntent {
         if let forced {
             spec = (forced.tag.technologies, forced.tag.extendedReads)
         } else if let active = model.activeProfile {
-            let all = model.rules.current.enabled ? model.profiles.profiles : [active]
+            // Same as ScanController.readSpec: rules or a tag's own profile can pick any profile.
+            let anyCandidate = model.rules.current.enabled || model.tags.current.tags.contains { $0.profile != nil }
+            let all = anyCandidate ? model.profiles.profiles : [active]
             var tech: [String] = []
             for p in all { for t in p.tag.technologies where !tech.contains(t) { tech.append(t) } }
             spec = (tech, all.contains { $0.tag.extendedReads })
@@ -121,8 +123,8 @@ struct ScanAndSendIntent: AppIntent {
         switch model.scanner.targets(for: reading, scanTimeMs: scanTime, forced: forced) {
         case .failure(let f):
             throw IntentFailure.message(ScanController.failureText(f))
-        case .success(let targets):
-            let outcomes = await model.scanner.send(targets, reading: reading, scanTimeMs: scanTime)
+        case .success(let routed):
+            let outcomes = await model.scanner.send(routed, reading: reading, scanTimeMs: scanTime)
             return .result(value: outcomes.map { ScanResultEntity($0) })
         }
     }

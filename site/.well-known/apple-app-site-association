@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["4AVJZV35G8.com.tappony.app"],
+        "components": [
+          { "/": "/t/*", "comment": "TapPony launch links" }
+        ]
+      }
+    ]
+  }
+}

@@ -171,3 +171,44 @@ final class RulesStore: ObservableObject {
         try? Data(Rules.encode(set).utf8).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
     }
 }
+
+/// tags.json beside the profiles (PROFILE_SCHEMA.md section 16).
+@MainActor
+final class TagsStore: ObservableObject {
+    @Published private(set) var current: TagRegistry
+    private let url: URL
+
+    init() {
+        let base = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        try? FileManager.default.createDirectory(at: base, withIntermediateDirectories: true)
+        url = base.appendingPathComponent("tags.json")
+        if let data = try? Data(contentsOf: url), let reg = try? Tags.decode(String(decoding: data, as: UTF8.self)) {
+            current = reg
+        } else {
+            current = TagRegistry()
+        }
+    }
+
+    func save(_ reg: TagRegistry) {
+        current = reg
+        try? Data(Tags.encode(reg).utf8).write(to: url, options: [.atomic, .completeFileProtectionUntilFirstUserAuthentication])
+    }
+
+    /// Replaces the entry for the same tag (same token, or same UID), or adds it at the end.
+    func upsert(_ entry: TagEntry, replacing: TagEntry? = nil) {
+        var reg = current
+        let key = replacing ?? entry
+        if let i = reg.tags.firstIndex(where: { Self.same($0, key) }) { reg.tags[i] = entry } else { reg.tags.append(entry) }
+        save(reg)
+    }
+
+    func remove(_ entry: TagEntry) {
+        var reg = current
+        reg.tags.removeAll { $0 == entry }
+        save(reg)
+    }
+
+    private static func same(_ a: TagEntry, _ b: TagEntry) -> Bool {
+        (!a.token.isEmpty && a.token == b.token) || (a.token.isEmpty && b.token.isEmpty && !a.uid.isEmpty && a.uid == b.uid)
+    }
+}

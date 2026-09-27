@@ -351,6 +351,10 @@ vcase("type_b_pupi", {"family": "iso7816_b", "tagType": "iso7816", "identifier":
 vcase("context_label_and_platform", {"family": "mifare", "tagType": "mifare_ultralight", "identifier": "04112233445566"},
       {"deviceLabel": "Front desk phone", "platform": "android", "tagLabel": "Garage", "tz": "Asia/Yerevan", "seq": 0},
       device_label="Front desk phone", platform="android", tag_label="Garage", timestamp_local="2026-09-26T02:30:05.123+04:00", seq="0")
+vcase("launch_without_tag", {"family": "mifare", "tagType": "launch_link", "identifier": "",
+      "ndef": [uri_rec(0x04, "tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw")]},
+      uid="", uid_colon="", uid_dec="", uid_len="0", random_uid="false", manufacturer="", tag_type="launch_link",
+      payload="https://tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw", token="AAECAwQFBgcICQoLDA0ODw", ndef_count="1")
 vcase("truncation", {"family": "mifare", "tagType": "mifare_ultralight", "identifier": "04112233445566",
       "ndef": [text_rec("y" * 9000)]})
 assert len(vcases[-1]["expect"]["payload"]) == 8192
@@ -507,6 +511,8 @@ RULESET = {
          "match": {"field": "uid", "op": "prefix", "value": "e0 04"}, "profiles": ["P-INV"]},
         {"id": "R-EMPTY", "name": "No profiles", "enabled": True,
          "match": {"field": "chip", "op": "contains", "value": ""}, "profiles": []},
+        {"id": "R-LABEL", "name": "Named shelf tags", "enabled": True,
+         "match": {"field": "tag_label", "op": "prefix", "value": "shelf"}, "profiles": ["P-INV"]},
     ],
 }
 def tv(**kw):
@@ -514,11 +520,11 @@ def tv(**kw):
     base.update(kw)
     return base
 rcases2 = []
-def rt(cid, variables, active, expect_ids, expect_rule, ruleset=RULESET):
-    got = ref.route(ruleset, variables, active)
+def rt(cid, variables, active, expect_ids, expect_rule, ruleset=RULESET, tag_profile=None):
+    got = ref.route(ruleset, variables, active, tag_profile)
     assert got == (expect_ids, expect_rule), (cid, got)
     rcases2.append({"id": cid, "variables": variables, "activeProfileId": active, "rules": None if ruleset is RULESET else ruleset,
-                    "expectProfiles": expect_ids, "expectRule": expect_rule})
+                    "tagProfileId": tag_profile, "expectProfiles": expect_ids, "expectRule": expect_rule})
 rt("uid_equals_normalized", tv(uid="04A27F1B5E8000", tag_type="mifare_ultralight"), "P-ACTIVE", ["P-HA", "P-LOG"], "R-GARAGE")
 rt("disabled_rule_skipped_then_contains", tv(uid="04112233445566", ndef_text="Front door"), "P-ACTIVE", ["P-HA"], "R-DOOR")
 rt("tag_type", tv(uid="08A1B2C3", tag_type="mifare_desfire"), "P-ACTIVE", ["P-SIGNIN"], "R-BADGE")
@@ -531,9 +537,17 @@ rt("unmatched_ignore", tv(uid="0266A1B2C3D4E5"), "P-ACTIVE", [], None, ruleset=d
 rt("rules_off_uses_active", tv(uid="04A27F1B5E8000"), "P-ACTIVE", ["P-ACTIVE"], None, ruleset=dict(RULESET, enabled=False))
 rt("first_match_wins", tv(uid="04A27F1B5E8000", ndef_text="door"), "P-ACTIVE", ["P-HA", "P-LOG"], "R-GARAGE")
 rt("case_insensitive_ascii", tv(uid="04000000000009", ndef_text="BACK DoOr"), "P-ACTIVE", ["P-HA"], "R-DOOR")
+rt("tag_label_prefix", tv(uid="04000000000010", tag_label="Shelf B3"), "P-ACTIVE", ["P-INV"], "R-LABEL")
+rt("tag_profile_beats_active", tv(uid="0266A1B2C3D4E5"), "P-ACTIVE", ["P-TAG"], None, tag_profile="P-TAG")
+rt("tag_profile_beats_ignore", tv(uid="0266A1B2C3D4E5"), "P-ACTIVE", ["P-TAG"], None,
+   ruleset=dict(RULESET, unmatched="ignore"), tag_profile="P-TAG")
+rt("rule_beats_tag_profile", tv(uid="04A27F1B5E8000"), "P-ACTIVE", ["P-HA", "P-LOG"], "R-GARAGE", tag_profile="P-TAG")
+rt("rules_off_tag_profile", tv(uid="04A27F1B5E8000"), "P-ACTIVE", ["P-TAG"], None,
+   ruleset=dict(RULESET, enabled=False), tag_profile="P-TAG")
+rt("tag_profile_no_active", tv(uid="0266A1B2C3D4E5"), None, ["P-TAG"], None, tag_profile="P-TAG")
 errs = [{"id": r["id"], "error": ref.rule_error(r)} for r in RULESET["rules"]]
 assert {e["id"]: e["error"] for e in errs} == {"R-OFF": None, "R-GARAGE": None, "R-DOOR": None, "R-BADGE": None, "R-BADREGEX": "badRegex",
-                                              "R-SHELF": None, "R-NXP": None, "R-EMPTY": "noProfiles"}
+                                              "R-SHELF": None, "R-NXP": None, "R-EMPTY": "noProfiles", "R-LABEL": None}
 extra_errs = [
     {"rule": {"id": "X1", "name": "", "enabled": True, "match": {"field": "secret", "op": "equals", "value": ""}, "profiles": ["P"]}, "error": "unknownField"},
     {"rule": {"id": "X2", "name": "", "enabled": True, "match": {"field": "uid", "op": "startsWith", "value": ""}, "profiles": ["P"]}, "error": "unknownOp"},
@@ -544,6 +558,47 @@ json.dump({"description": "Rules engine: routing a scan to profiles. PROFILE_SCH
            "ruleset": RULESET, "cases": rcases2, "errors": errs, "extraErrors": extra_errs,
            "encoded": json.dumps(RULESET, separators=(",", ":"), ensure_ascii=False)},
           open(os.path.join(OUT, "rules_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+# ---- tags registry and launch links ------------------------------------------------
+TAGS_DOC = {"schema": 1, "tags": [
+    {"uid": "04:a2:7f:1b:5e:80:00", "label": "Garage", "notes": "Left of the door", "profile": "P-HA", "token": ""},
+    {"uid": "", "label": "Badge (random ID)", "notes": "", "profile": None, "token": "AAECAwQFBgcICQoLDA0ODw"},
+    {"uid": "E004015012345678", "label": "Shelf B3", "notes": "", "profile": "", "token": "zz9_Y-8xQwErTyUiOpAsDf", "extra": 1},
+    "not an object",
+]}
+reg = ref.tags_decode(TAGS_DOC)
+assert [t["uid"] for t in reg["tags"]] == ["04A27F1B5E8000", "", "E004015012345678"]
+assert reg["tags"][2]["profile"] is None
+tags_encoded = ref.tags_encode(reg)
+assert tags_encoded.startswith('{"schema":1,"tags":[{"uid":"04A27F1B5E8000","label":"Garage","notes":"Left of the door","profile":"P-HA","token":""}')
+fcases = []
+def tf(cid, uid, token, random_uid, expect_label):
+    got = ref.tags_find(reg, uid, token, random_uid)
+    assert (got["label"] if got else None) == expect_label, (cid, got)
+    fcases.append({"id": cid, "uid": uid, "token": token, "randomUid": random_uid, "expectLabel": expect_label})
+tf("uid_exact", "04A27F1B5E8000", "", False, "Garage")
+tf("uid_with_separators", "04:a2:7f:1b:5e:80:00", "", False, "Garage")
+tf("token_only", "", "AAECAwQFBgcICQoLDA0ODw", False, "Badge (random ID)")
+tf("token_beats_uid", "04A27F1B5E8000", "zz9_Y-8xQwErTyUiOpAsDf", False, "Shelf B3")
+tf("unknown_token_falls_back_to_uid", "E004015012345678", "nope", False, "Shelf B3")
+tf("random_uid_never_matches_by_uid", "04A27F1B5E8000", "", True, None)
+tf("empty_uid_matches_nothing", "", "", False, None)
+tf("unknown", "0266A1B2C3D4E5", "", False, None)
+lcases = []
+for raw_hex, expect in [("000102030405060708090a0b0c0d0e0f", "AAECAwQFBgcICQoLDA0ODw"),
+                        ("fbff3e0f7ffcf1c0ff00ee11dd22cc33", "-_8-D3_88cD_AO4R3SLMMw")]:
+    tok = ref.launch_token(bytes.fromhex(raw_hex))
+    assert tok == expect and len(tok) == 22, tok
+    link = ref.launch_link(tok)
+    assert ref.token_of(link) == tok
+    lcases.append({"bytes": raw_hex, "token": tok, "link": link})
+vtok = [("AAECAwQFBgcICQoLDA0ODw", True), ("short", False), ("has space in it abcdef", False), ("a" * 64, True), ("a" * 65, False), ("", False)]
+for t, ok in vtok: assert ref.is_launch_token(t) == ok, t
+json.dump({"description": "Tags registry and launch links. PROFILE_SCHEMA.md section 16.",
+           "registry": TAGS_DOC, "encoded": tags_encoded, "find": fcases, "tokens": lcases,
+           "validTokens": [{"token": t, "valid": ok} for t, ok in vtok]},
+          open(os.path.join(OUT, "tags_vectors.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+print("tags", len(fcases), "launch", len(lcases))
 
 # ---- result text -----------------------------------------------------------------
 tcases2 = []

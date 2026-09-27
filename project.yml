@@ -50,6 +50,7 @@ targets:
       path: App/TapPony.entitlements
       properties:
         com.apple.developer.nfc.readersession.formats: [TAG]
+        com.apple.developer.associated-domains: ["applinks:tappony.app"]
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tappony.app

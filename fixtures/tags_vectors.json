@@ -1,0 +1,128 @@
+{
+ "description": "Tags registry and launch links. PROFILE_SCHEMA.md section 16.",
+ "registry": {
+  "schema": 1,
+  "tags": [
+   {
+    "uid": "04:a2:7f:1b:5e:80:00",
+    "label": "Garage",
+    "notes": "Left of the door",
+    "profile": "P-HA",
+    "token": ""
+   },
+   {
+    "uid": "",
+    "label": "Badge (random ID)",
+    "notes": "",
+    "profile": null,
+    "token": "AAECAwQFBgcICQoLDA0ODw"
+   },
+   {
+    "uid": "E004015012345678",
+    "label": "Shelf B3",
+    "notes": "",
+    "profile": "",
+    "token": "zz9_Y-8xQwErTyUiOpAsDf",
+    "extra": 1
+   },
+   "not an object"
+  ]
+ },
+ "encoded": "{\"schema\":1,\"tags\":[{\"uid\":\"04A27F1B5E8000\",\"label\":\"Garage\",\"notes\":\"Left of the door\",\"profile\":\"P-HA\",\"token\":\"\"},{\"uid\":\"\",\"label\":\"Badge (random ID)\",\"notes\":\"\",\"profile\":null,\"token\":\"AAECAwQFBgcICQoLDA0ODw\"},{\"uid\":\"E004015012345678\",\"label\":\"Shelf B3\",\"notes\":\"\",\"profile\":null,\"token\":\"zz9_Y-8xQwErTyUiOpAsDf\"}]}",
+ "find": [
+  {
+   "id": "uid_exact",
+   "uid": "04A27F1B5E8000",
+   "token": "",
+   "randomUid": false,
+   "expectLabel": "Garage"
+  },
+  {
+   "id": "uid_with_separators",
+   "uid": "04:a2:7f:1b:5e:80:00",
+   "token": "",
+   "randomUid": false,
+   "expectLabel": "Garage"
+  },
+  {
+   "id": "token_only",
+   "uid": "",
+   "token": "AAECAwQFBgcICQoLDA0ODw",
+   "randomUid": false,
+   "expectLabel": "Badge (random ID)"
+  },
+  {
+   "id": "token_beats_uid",
+   "uid": "04A27F1B5E8000",
+   "token": "zz9_Y-8xQwErTyUiOpAsDf",
+   "randomUid": false,
+   "expectLabel": "Shelf B3"
+  },
+  {
+   "id": "unknown_token_falls_back_to_uid",
+   "uid": "E004015012345678",
+   "token": "nope",
+   "randomUid": false,
+   "expectLabel": "Shelf B3"
+  },
+  {
+   "id": "random_uid_never_matches_by_uid",
+   "uid": "04A27F1B5E8000",
+   "token": "",
+   "randomUid": true,
+   "expectLabel": null
+  },
+  {
+   "id": "empty_uid_matches_nothing",
+   "uid": "",
+   "token": "",
+   "randomUid": false,
+   "expectLabel": null
+  },
+  {
+   "id": "unknown",
+   "uid": "0266A1B2C3D4E5",
+   "token": "",
+   "randomUid": false,
+   "expectLabel": null
+  }
+ ],
+ "tokens": [
+  {
+   "bytes": "000102030405060708090a0b0c0d0e0f",
+   "token": "AAECAwQFBgcICQoLDA0ODw",
+   "link": "https://tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw"
+  },
+  {
+   "bytes": "fbff3e0f7ffcf1c0ff00ee11dd22cc33",
+   "token": "-_8-D3_88cD_AO4R3SLMMw",
+   "link": "https://tappony.app/t/?k=-_8-D3_88cD_AO4R3SLMMw"
+  }
+ ],
+ "validTokens": [
+  {
+   "token": "AAECAwQFBgcICQoLDA0ODw",
+   "valid": true
+  },
+  {
+   "token": "short",
+   "valid": false
+  },
+  {
+   "token": "has space in it abcdef",
+   "valid": false
+  },
+  {
+   "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "valid": true
+  },
+  {
+   "token": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+   "valid": false
+  },
+  {
+   "token": "",
+   "valid": false
+  }
+ ]
+}

@@ -904,6 +904,77 @@
    }
   },
   {
+   "id": "launch_without_tag",
+   "reading": {
+    "family": "mifare",
+    "tagType": "launch_link",
+    "identifier": "",
+    "ndef": [
+     {
+      "tnf": 1,
+      "type": "55",
+      "id": "",
+      "payload": "04746170706f6e792e6170702f742f3f6b3d41414543417751464267634943516f4c4441304f4477"
+     }
+    ]
+   },
+   "context": {
+    "scanTimeMs": 1790375405123,
+    "sendTimeMs": 1790375407000,
+    "tz": "America/Chicago",
+    "profileName": "Front door",
+    "profileId": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "deviceLabel": "",
+    "platform": "ios",
+    "nonce": "00112233445566778899aabbccddeeff",
+    "seq": 42
+   },
+   "expect": {
+    "uid": "",
+    "uid_colon": "",
+    "uid_dec": "",
+    "uid_rev": "",
+    "uid_len": "0",
+    "random_uid": "false",
+    "manufacturer": "",
+    "tag_type": "launch_link",
+    "chip": "",
+    "signature": "",
+    "counter": "",
+    "atqa": "",
+    "sak": "",
+    "dsfid": "",
+    "afi": "",
+    "block_size": "",
+    "block_count": "",
+    "idm": "",
+    "pmm": "",
+    "system_code": "",
+    "pupi": "",
+    "historical_bytes": "",
+    "application_data": "",
+    "tag_label": "",
+    "payload": "https://tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw",
+    "ndef_text": "",
+    "ndef_uri": "https://tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw",
+    "ndef_json": "[{\"tnf\":1,\"type\":\"U\",\"id\":\"\",\"payload\":\"BHRhcHBvbnkuYXBwL3QvP2s9QUFFQ0F3UUZCZ2NJQ1FvTERBME9Edw==\",\"uri\":\"https://tappony.app/t/?k=AAECAwQFBgcICQoLDA0ODw\"}]",
+    "ndef_raw": "0QEoVQR0YXBwb255LmFwcC90Lz9rPUFBRUNBd1FGQmdjSUNRb0xEQTBPRHc=",
+    "ndef_count": "1",
+    "token": "AAECAwQFBgcICQoLDA0ODw",
+    "timestamp": "2026-09-25T22:30:05.123Z",
+    "timestamp_local": "2026-09-25T17:30:05.123-05:00",
+    "unix": "1790375405",
+    "tz": "America/Chicago",
+    "sent_at": "2026-09-25T22:30:07.000Z",
+    "profile": "Front door",
+    "profile_id": "4F0C2B1E-7A57-4F5B-9E0B-8C2A1D3E5F60",
+    "device_label": "",
+    "platform": "ios",
+    "nonce": "00112233445566778899aabbccddeeff",
+    "seq": "42"
+   }
+  },
+  {
    "id": "truncation",
    "reading": {
     "family": "mifare",

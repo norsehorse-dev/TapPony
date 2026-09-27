@@ -1,3 +1,4 @@
+import CoreNFC
 import Network
 import SwiftUI
 import TapPonyKit
@@ -14,7 +15,7 @@ enum Palette {
 }
 
 enum AppTab: Hashable {
-    case scan, profiles, history, settings
+    case scan, profiles, tags, history, settings
 }
 
 @MainActor
@@ -24,6 +25,7 @@ final class AppModel: ObservableObject {
     let profiles = ProfileStore()
     let settings = AppSettings()
     let rules = RulesStore()
+    let tags = TagsStore()
     let feedback = Feedback()
     let engine: ScanEngine
     let history: HistoryStore
@@ -55,6 +57,10 @@ final class AppModel: ObservableObject {
     /// Scan tab and start a read. Used by the Control Center control, widgets,
     /// Home Screen shortcuts and other apps.
     func open(_ url: URL) {
+        if Self.isLaunchLink(url) {
+            launch(url, records: [])
+            return
+        }
         guard url.scheme?.lowercased() == "tappony", url.host?.lowercased() == "scan" else { return }
         // A read already running keeps its profile; the link then only brings up the Scan tab.
         guard !scanner.reading, !scanner.batchOn else {
@@ -68,6 +74,31 @@ final class AppModel: ObservableObject {
         tab = .scan
         pendingScan = true
         if UIApplication.shared.applicationState == .active { runPendingScan() }
+    }
+
+    /// https://tappony.app/t/?k=<token>: from background tag reading (with the
+    /// tag's NDEF message) or a universal link opened anywhere else.
+    static func isLaunchLink(_ url: URL) -> Bool {
+        // url.path drops the trailing slash ("/t/?k=" gives "/t"); the percent-encoded form keeps it.
+        url.scheme?.lowercased() == "https" && url.host?.lowercased() == "tappony.app"
+            && url.path(percentEncoded: true).hasPrefix("/t/")
+    }
+
+    func launch(_ url: URL, records: [NdefRecord]) {
+        tab = .scan
+        scanner.launch(link: url.absoluteString, records: records)
+    }
+
+    /// The NSUserActivity iOS hands over after the user taps the notification
+    /// for a background tag read, or opens a universal link.
+    func continueActivity(_ activity: NSUserActivity) {
+        guard let url = activity.webpageURL, Self.isLaunchLink(url) else { return }
+        // A universal link that didn't come from a tag carries a placeholder
+        // record with an empty TNF; drop it so the link itself becomes the record.
+        let records = activity.ndefMessagePayload.records.filter { $0.typeNameFormat != .empty }.map {
+            NdefRecord(tnf: Int($0.typeNameFormat.rawValue), type: [UInt8]($0.type), id: [UInt8]($0.identifier), payload: [UInt8]($0.payload))
+        }
+        launch(url, records: records)
     }
 
     /// Core NFC only starts once the app is active, so a link that arrives
@@ -99,6 +130,9 @@ struct TapPonyApp: App {
                 ProfilesView()
                     .tabItem { Label("Profiles", systemImage: "slider.horizontal.3") }
                     .tag(AppTab.profiles)
+                TagsView()
+                    .tabItem { Label("Tags", systemImage: "tag") }
+                    .tag(AppTab.tags)
                 HistoryView()
                     .tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
                     .tag(AppTab.history)
@@ -112,10 +146,12 @@ struct TapPonyApp: App {
             .environmentObject(model.history)
             .environmentObject(model.queue)
             .environmentObject(model.rules)
+            .environmentObject(model.tags)
             .environmentObject(model.scanner)
             .tint(Palette.blue)
             .preferredColorScheme(.dark)
             .onOpenURL { model.open($0) }
+            .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { model.continueActivity($0) }
         }
         .onChange(of: phase) { _, now in
             if now == .active {

@@ -108,6 +108,19 @@
      "value": ""
     },
     "profiles": []
+   },
+   {
+    "id": "R-LABEL",
+    "name": "Named shelf tags",
+    "enabled": true,
+    "match": {
+     "field": "tag_label",
+     "op": "prefix",
+     "value": "shelf"
+    },
+    "profiles": [
+     "P-INV"
+    ]
    }
   ]
  },
@@ -121,10 +134,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-HA",
     "P-LOG"
@@ -140,10 +155,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "Front door",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-HA"
    ],
@@ -158,10 +175,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-SIGNIN"
    ],
@@ -176,10 +195,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": "https://inv.example.com/item/4411"
+    "ndef_uri": "https://inv.example.com/item/4411",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-INV"
    ],
@@ -194,10 +215,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": "https://inv.example.com/item/44x"
+    "ndef_uri": "https://inv.example.com/item/44x",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-ACTIVE"
    ],
@@ -212,10 +235,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-INV"
    ],
@@ -230,10 +255,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-ACTIVE"
    ],
@@ -248,10 +275,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": null,
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [],
    "expectRule": null
   },
@@ -264,7 +293,8 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": {
@@ -375,9 +405,23 @@
        "value": ""
       },
       "profiles": []
+     },
+     {
+      "id": "R-LABEL",
+      "name": "Named shelf tags",
+      "enabled": true,
+      "match": {
+       "field": "tag_label",
+       "op": "prefix",
+       "value": "shelf"
+      },
+      "profiles": [
+       "P-INV"
+      ]
      }
     ]
    },
+   "tagProfileId": null,
    "expectProfiles": [],
    "expectRule": null
   },
@@ -390,7 +434,8 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": {
@@ -501,9 +546,23 @@
        "value": ""
       },
       "profiles": []
+     },
+     {
+      "id": "R-LABEL",
+      "name": "Named shelf tags",
+      "enabled": true,
+      "match": {
+       "field": "tag_label",
+       "op": "prefix",
+       "value": "shelf"
+      },
+      "profiles": [
+       "P-INV"
+      ]
      }
     ]
    },
+   "tagProfileId": null,
    "expectProfiles": [
     "P-ACTIVE"
    ],
@@ -518,10 +577,12 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "door",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-HA",
     "P-LOG"
@@ -537,14 +598,383 @@
     "manufacturer": "",
     "payload": "",
     "ndef_text": "BACK DoOr",
-    "ndef_uri": ""
+    "ndef_uri": "",
+    "tag_label": ""
    },
    "activeProfileId": "P-ACTIVE",
    "rules": null,
+   "tagProfileId": null,
    "expectProfiles": [
     "P-HA"
    ],
    "expectRule": "R-DOOR"
+  },
+  {
+   "id": "tag_label_prefix",
+   "variables": {
+    "uid": "04000000000010",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": "Shelf B3"
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "tagProfileId": null,
+   "expectProfiles": [
+    "P-INV"
+   ],
+   "expectRule": "R-LABEL"
+  },
+  {
+   "id": "tag_profile_beats_active",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "tagProfileId": "P-TAG",
+   "expectProfiles": [
+    "P-TAG"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "tag_profile_beats_ignore",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": {
+    "schema": 1,
+    "enabled": true,
+    "unmatched": "ignore",
+    "rules": [
+     {
+      "id": "R-OFF",
+      "name": "Disabled rule",
+      "enabled": false,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "04"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-GARAGE",
+      "name": "Garage sticker",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "equals",
+       "value": "04:a2:7f:1b:5e:80:00"
+      },
+      "profiles": [
+       "P-HA",
+       "P-LOG",
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-DOOR",
+      "name": "Door tags",
+      "enabled": true,
+      "match": {
+       "field": "ndef_text",
+       "op": "contains",
+       "value": "DOOR"
+      },
+      "profiles": [
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-BADGE",
+      "name": "Office badges",
+      "enabled": true,
+      "match": {
+       "field": "tag_type",
+       "op": "equals",
+       "value": "mifare_desfire"
+      },
+      "profiles": [
+       "P-SIGNIN"
+      ]
+     },
+     {
+      "id": "R-BADREGEX",
+      "name": "Broken regex",
+      "enabled": true,
+      "match": {
+       "field": "payload",
+       "op": "regex",
+       "value": "(unclosed"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-SHELF",
+      "name": "Shelf labels",
+      "enabled": true,
+      "match": {
+       "field": "ndef_uri",
+       "op": "regex",
+       "value": "^https://inv\\.example\\.com/item/[0-9]+$"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-NXP",
+      "name": "Any NXP ICODE",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "e0 04"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-EMPTY",
+      "name": "No profiles",
+      "enabled": true,
+      "match": {
+       "field": "chip",
+       "op": "contains",
+       "value": ""
+      },
+      "profiles": []
+     },
+     {
+      "id": "R-LABEL",
+      "name": "Named shelf tags",
+      "enabled": true,
+      "match": {
+       "field": "tag_label",
+       "op": "prefix",
+       "value": "shelf"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     }
+    ]
+   },
+   "tagProfileId": "P-TAG",
+   "expectProfiles": [
+    "P-TAG"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "rule_beats_tag_profile",
+   "variables": {
+    "uid": "04A27F1B5E8000",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": null,
+   "tagProfileId": "P-TAG",
+   "expectProfiles": [
+    "P-HA",
+    "P-LOG"
+   ],
+   "expectRule": "R-GARAGE"
+  },
+  {
+   "id": "rules_off_tag_profile",
+   "variables": {
+    "uid": "04A27F1B5E8000",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": ""
+   },
+   "activeProfileId": "P-ACTIVE",
+   "rules": {
+    "schema": 1,
+    "enabled": false,
+    "unmatched": "active",
+    "rules": [
+     {
+      "id": "R-OFF",
+      "name": "Disabled rule",
+      "enabled": false,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "04"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-GARAGE",
+      "name": "Garage sticker",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "equals",
+       "value": "04:a2:7f:1b:5e:80:00"
+      },
+      "profiles": [
+       "P-HA",
+       "P-LOG",
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-DOOR",
+      "name": "Door tags",
+      "enabled": true,
+      "match": {
+       "field": "ndef_text",
+       "op": "contains",
+       "value": "DOOR"
+      },
+      "profiles": [
+       "P-HA"
+      ]
+     },
+     {
+      "id": "R-BADGE",
+      "name": "Office badges",
+      "enabled": true,
+      "match": {
+       "field": "tag_type",
+       "op": "equals",
+       "value": "mifare_desfire"
+      },
+      "profiles": [
+       "P-SIGNIN"
+      ]
+     },
+     {
+      "id": "R-BADREGEX",
+      "name": "Broken regex",
+      "enabled": true,
+      "match": {
+       "field": "payload",
+       "op": "regex",
+       "value": "(unclosed"
+      },
+      "profiles": [
+       "P-NEVER"
+      ]
+     },
+     {
+      "id": "R-SHELF",
+      "name": "Shelf labels",
+      "enabled": true,
+      "match": {
+       "field": "ndef_uri",
+       "op": "regex",
+       "value": "^https://inv\\.example\\.com/item/[0-9]+$"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-NXP",
+      "name": "Any NXP ICODE",
+      "enabled": true,
+      "match": {
+       "field": "uid",
+       "op": "prefix",
+       "value": "e0 04"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     },
+     {
+      "id": "R-EMPTY",
+      "name": "No profiles",
+      "enabled": true,
+      "match": {
+       "field": "chip",
+       "op": "contains",
+       "value": ""
+      },
+      "profiles": []
+     },
+     {
+      "id": "R-LABEL",
+      "name": "Named shelf tags",
+      "enabled": true,
+      "match": {
+       "field": "tag_label",
+       "op": "prefix",
+       "value": "shelf"
+      },
+      "profiles": [
+       "P-INV"
+      ]
+     }
+    ]
+   },
+   "tagProfileId": "P-TAG",
+   "expectProfiles": [
+    "P-TAG"
+   ],
+   "expectRule": null
+  },
+  {
+   "id": "tag_profile_no_active",
+   "variables": {
+    "uid": "0266A1B2C3D4E5",
+    "tag_type": "",
+    "chip": "",
+    "manufacturer": "",
+    "payload": "",
+    "ndef_text": "",
+    "ndef_uri": "",
+    "tag_label": ""
+   },
+   "activeProfileId": null,
+   "rules": null,
+   "tagProfileId": "P-TAG",
+   "expectProfiles": [
+    "P-TAG"
+   ],
+   "expectRule": null
   }
  ],
  "errors": [
@@ -579,6 +1009,10 @@
   {
    "id": "R-EMPTY",
    "error": "noProfiles"
+  },
+  {
+   "id": "R-LABEL",
+   "error": null
   }
  ],
  "extraErrors": [
@@ -631,5 +1065,5 @@
    "error": "badRegex"
   }
  ],
- "encoded": "{\"schema\":1,\"enabled\":true,\"unmatched\":\"active\",\"rules\":[{\"id\":\"R-OFF\",\"name\":\"Disabled rule\",\"enabled\":false,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"04\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-GARAGE\",\"name\":\"Garage sticker\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"equals\",\"value\":\"04:a2:7f:1b:5e:80:00\"},\"profiles\":[\"P-HA\",\"P-LOG\",\"P-HA\"]},{\"id\":\"R-DOOR\",\"name\":\"Door tags\",\"enabled\":true,\"match\":{\"field\":\"ndef_text\",\"op\":\"contains\",\"value\":\"DOOR\"},\"profiles\":[\"P-HA\"]},{\"id\":\"R-BADGE\",\"name\":\"Office badges\",\"enabled\":true,\"match\":{\"field\":\"tag_type\",\"op\":\"equals\",\"value\":\"mifare_desfire\"},\"profiles\":[\"P-SIGNIN\"]},{\"id\":\"R-BADREGEX\",\"name\":\"Broken regex\",\"enabled\":true,\"match\":{\"field\":\"payload\",\"op\":\"regex\",\"value\":\"(unclosed\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-SHELF\",\"name\":\"Shelf labels\",\"enabled\":true,\"match\":{\"field\":\"ndef_uri\",\"op\":\"regex\",\"value\":\"^https://inv\\\\.example\\\\.com/item/[0-9]+$\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-NXP\",\"name\":\"Any NXP ICODE\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"e0 04\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-EMPTY\",\"name\":\"No profiles\",\"enabled\":true,\"match\":{\"field\":\"chip\",\"op\":\"contains\",\"value\":\"\"},\"profiles\":[]}]}"
+ "encoded": "{\"schema\":1,\"enabled\":true,\"unmatched\":\"active\",\"rules\":[{\"id\":\"R-OFF\",\"name\":\"Disabled rule\",\"enabled\":false,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"04\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-GARAGE\",\"name\":\"Garage sticker\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"equals\",\"value\":\"04:a2:7f:1b:5e:80:00\"},\"profiles\":[\"P-HA\",\"P-LOG\",\"P-HA\"]},{\"id\":\"R-DOOR\",\"name\":\"Door tags\",\"enabled\":true,\"match\":{\"field\":\"ndef_text\",\"op\":\"contains\",\"value\":\"DOOR\"},\"profiles\":[\"P-HA\"]},{\"id\":\"R-BADGE\",\"name\":\"Office badges\",\"enabled\":true,\"match\":{\"field\":\"tag_type\",\"op\":\"equals\",\"value\":\"mifare_desfire\"},\"profiles\":[\"P-SIGNIN\"]},{\"id\":\"R-BADREGEX\",\"name\":\"Broken regex\",\"enabled\":true,\"match\":{\"field\":\"payload\",\"op\":\"regex\",\"value\":\"(unclosed\"},\"profiles\":[\"P-NEVER\"]},{\"id\":\"R-SHELF\",\"name\":\"Shelf labels\",\"enabled\":true,\"match\":{\"field\":\"ndef_uri\",\"op\":\"regex\",\"value\":\"^https://inv\\\\.example\\\\.com/item/[0-9]+$\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-NXP\",\"name\":\"Any NXP ICODE\",\"enabled\":true,\"match\":{\"field\":\"uid\",\"op\":\"prefix\",\"value\":\"e0 04\"},\"profiles\":[\"P-INV\"]},{\"id\":\"R-EMPTY\",\"name\":\"No profiles\",\"enabled\":true,\"match\":{\"field\":\"chip\",\"op\":\"contains\",\"value\":\"\"},\"profiles\":[]},{\"id\":\"R-LABEL\",\"name\":\"Named shelf tags\",\"enabled\":true,\"match\":{\"field\":\"tag_label\",\"op\":\"prefix\",\"value\":\"shelf\"},\"profiles\":[\"P-INV\"]}]}"
 }

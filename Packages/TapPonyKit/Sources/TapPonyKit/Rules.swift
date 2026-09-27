@@ -40,7 +40,7 @@ public struct Route: Equatable {
 /// The rules engine, PROFILE_SCHEMA.md section 14. Mirrors com.tappony.core.Rules.
 public enum Rules {
 
-    public static let fields = ["uid", "tag_type", "chip", "manufacturer", "payload", "ndef_text", "ndef_uri"]
+    public static let fields = ["uid", "tag_type", "chip", "manufacturer", "payload", "ndef_text", "ndef_uri", "tag_label"]
     public static let ops = ["equals", "prefix", "contains", "regex"]
 
     public static func error(_ rule: Rule) -> String? {
@@ -88,14 +88,19 @@ public enum Rules {
         }
     }
 
-    public static func route(_ set: RuleSet, variables: [String: String], activeProfileId: String?) -> Route {
-        let fallback = activeProfileId.map { [$0] } ?? []
+    /// `tagProfileId` is the scanned tag's default profile from the registry
+    /// (section 16): it beats the active profile and the unmatched setting, but a
+    /// matching rule beats it.
+    public static func route(_ set: RuleSet, variables: [String: String], activeProfileId: String?,
+                             tagProfileId: String? = nil) -> Route {
+        let tagProfile = (tagProfileId?.isEmpty ?? true) ? nil : tagProfileId
+        let fallback = tagProfile.map { [$0] } ?? activeProfileId.map { [$0] } ?? []
         guard set.enabled else { return Route(profileIds: fallback, ruleId: nil) }
         for r in set.rules where matches(r, variables) {
             var seen = Set<String>()
             return Route(profileIds: r.profiles.filter { seen.insert($0).inserted }, ruleId: r.id)
         }
-        if set.unmatched == RuleSet.unmatchedIgnore { return Route(profileIds: [], ruleId: nil) }
+        if set.unmatched == RuleSet.unmatchedIgnore && tagProfile == nil { return Route(profileIds: [], ruleId: nil) }
         return Route(profileIds: fallback, ruleId: nil)
     }
 

@@ -179,6 +179,7 @@ enum RuleText {
         case "payload": return String(localized: "Content")
         case "ndef_text": return String(localized: "NDEF text")
         case "ndef_uri": return String(localized: "NDEF link")
+        case "tag_label": return String(localized: "Tag name")
         default: return f
         }
     }

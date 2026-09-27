@@ -189,6 +189,7 @@ Errors are reported as `hostPolicy:<reason>`, `urlTemplate:<reason>`, `template:
 - `{ndef_json}`: a compact JSON array, one object per record, keys in this order: `tnf` (number), `type` (the type bytes as Latin-1 text), `id` (Base64), `payload` (Base64), then `text` or `uri` when the record decodes as one. No whitespace.
 - `{ndef_raw}`: Base64 of the NDEF message re-encoded from its records (NFC Forum NDEF 1.0: MB on the first record, ME on the last, SR when the payload is under 256 bytes, IL when there is an ID). Both platforms encode it themselves so the bytes match.
 - `{token}`: the `k` query parameter of `{ndef_uri}` when it is an `https://tappony.app/t/...` launch link, otherwise empty.
+- A launch that arrives without a tag read (iOS background tag reading, or an App Link opened from outside the app) has no identifier. It is built as a reading with family `mifare`, an empty identifier and tag type `launch_link`, so the UID variables are empty (`{uid_len}` is `0`, `{random_uid}` is `false`) and the NDEF variables come from the delivered message, or from a single URI record holding the link when only the URL arrived.
 - `{idm}` is the UID for FeliCa and empty otherwise; `{pupi}` is the UID for ISO 14443-B and empty otherwise.
 - Hex-valued variables (`signature`, `atqa`, `sak`, `dsfid`, `afi`, `pmm`, `system_code`, `historical_bytes`, `application_data`) are uppercase with no separators.
 
@@ -248,13 +249,13 @@ Rules route each scan to one or more profiles by what the tag is, so one phone c
 ```
 
 - `enabled` false means rules are ignored and every scan goes to the active profile, as before.
-- `match.field` is one of `uid`, `tag_type`, `chip`, `manufacturer`, `payload`, `ndef_text`, `ndef_uri`, read from the scan's variables.
+- `match.field` is one of `uid`, `tag_type`, `chip`, `manufacturer`, `payload`, `ndef_text`, `ndef_uri`, `tag_label`, read from the scan's variables. `tag_label` is the name the tag has in the registry (section 16).
 - `match.op` is `equals`, `prefix`, `contains` or `regex`.
   - For `uid`, both sides drop `:`, `-` and spaces and compare in uppercase, so a UID copied in any common form matches.
   - Other fields compare with ASCII case folding.
   - `regex` searches anywhere in the value, case-sensitive, and should stick to the common subset (character classes like `[0-9]`, anchors, alternation, quantifiers) so both platforms agree. Only `\n` counts as a line end (for `$` and `.`), and an empty pattern matches everything. An invalid pattern means the rule never matches, and the editor flags it.
 - Rules are tried in order. The first enabled, valid rule that matches decides, and every profile it lists receives the scan (fan-out). A profile listed twice gets it once. A rule with no profiles is invalid.
-- When nothing matches, `unmatched` decides: `active` sends to the active profile, and `ignore` sends nothing and says so on the Scan screen.
+- When nothing matches, the tag's own default profile from the registry (section 16) decides if it has one. Otherwise `unmatched` decides: `active` sends to the active profile, and `ignore` sends nothing and says so on the Scan screen. With rules off, a tag's default profile still beats the active profile.
 - The tag is read once, with chip details on if any candidate profile wants them. Each profile then gets its own request, `{seq}`, history row and result.
 - The encoded document uses exactly the key order shown, compact JSON.
 
@@ -264,3 +265,30 @@ Rules route each scan to one or more profiles by what the tag is, so one phone c
 
 With `after.speak` on, the app speaks the result text if there is one, otherwise the server message, otherwise a short localized "Sent" or "Failed". Speech is at most 200 code points and is never HTML or a link.
 
+## 16. Tags registry and launch links
+
+The registry names tags the user owns. It lives in its own document, `tags.json`, beside the profiles:
+
+```json
+{
+  "schema": 1,
+  "tags": [
+    { "uid": "04A27F1B5E8000", "label": "Garage", "notes": "Left of the door", "profile": "<profile id>", "token": "" }
+  ]
+}
+```
+
+- `uid` is the canonical `{uid}` (uppercase hex, no separators). Readers normalize whatever they find the same way rules do (drop `:`, `-` and spaces, uppercase). It is empty for a tag whose UID is random.
+- `label` feeds `{tag_label}` and the `tag_label` rule field. `notes` is for the user only and never sent.
+- `profile` is the tag's default profile (section 14) or `null`. An empty string reads as `null`.
+- `token` is the launch-link token written to the tag, or empty.
+- The encoded document uses exactly the key order shown, compact JSON. Readers ignore unknown keys and entries that are not objects, and refuse a newer `schema`.
+- Lookup for a scan: an entry whose `token` equals the scan's non-empty `{token}` wins. Otherwise an entry whose `uid` equals the scan's normalized `{uid}`, unless the scan's UID is random or empty. The first entry in document order wins at each step.
+
+Launch links:
+
+- The link is `https://tappony.app/t/?k=<token>`, written as an NFC Forum URI record (prefix code `0x04`). The token is the Base64url encoding (RFC 4648 section 5, no padding) of 16 random bytes, so 22 characters. A valid token is 16 to 64 characters from `A-Z a-z 0-9 _ -`.
+- The app acts only on tokens it has in the registry. A link with an unknown token opens the Scan tab and sends nothing.
+- A known token sends to the tag's route (section 14) with the variables of a launch without a tag read (section 10) and `{tag_label}` from the registry.
+- "Mirror UID" writes a single Text record (language `en`, UTF-8) holding the tag's `{uid}`, so NDEF-only readers can see it.
+- iOS serves `/.well-known/apple-app-site-association` for `/t/*`, and Android verifies `https://tappony.app/t/` App Links with `/.well-known/assetlinks.json`, both on tappony.app.

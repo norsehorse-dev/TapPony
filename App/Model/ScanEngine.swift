@@ -70,7 +70,7 @@ final class ScanEngine {
 
     static func nowMs() -> Int64 { Int64(Date().timeIntervalSince1970 * 1000) }
 
-    func context(_ p: Profile, scanTimeMs: Int64, test: Bool = false) -> SendContext {
+    func context(_ p: Profile, scanTimeMs: Int64, test: Bool = false, tagLabel: String = "") -> SendContext {
         SendContext(
             scanTimeMs: scanTimeMs,
             sendTimeMs: Self.nowMs(),
@@ -80,14 +80,16 @@ final class ScanEngine {
             deviceLabel: settings.deviceLabel,
             platform: "ios",
             nonce: Self.nonce(),
-            seq: test ? 0 : settings.nextSeq(p.id)
+            seq: test ? 0 : settings.nextSeq(p.id),
+            tagLabel: tagLabel
         )
     }
 
     /// A real scan: send, then either queue it (no response, profile opted in)
     /// or record it in history.
-    func run(_ p: Profile, reading: TagReading, scanTimeMs: Int64, history: HistoryStore?, queue: OfflineQueue?) async -> ScanOutcome {
-        let ctx = context(p, scanTimeMs: scanTimeMs)
+    func run(_ p: Profile, reading: TagReading, scanTimeMs: Int64, history: HistoryStore?, queue: OfflineQueue?,
+             tagLabel: String = "") async -> ScanOutcome {
+        let ctx = context(p, scanTimeMs: scanTimeMs, tagLabel: tagLabel)
         let vars = Variables.build(reading, ctx)
         var outcome = await send(p, vars, scanTimeMs: ctx.scanTimeMs, sendTimeMs: ctx.sendTimeMs)
         if let queue, p.after.queueOffline, outcome.isNoResponse,

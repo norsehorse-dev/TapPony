@@ -26,6 +26,19 @@ public enum Ndef {
         "urn:epc:tag:", "urn:epc:pat:", "urn:epc:raw:", "urn:epc:", "urn:nfc:",
     ]
 
+    /// A well-known URI record, with the longest matching NFC Forum prefix code.
+    public static func uriRecord(_ uri: String) -> NdefRecord {
+        var code = 0
+        // Byte-wise like Kotlin's startsWith: String.hasPrefix compares grapheme
+        // clusters, so a combining mark after the prefix would defeat it.
+        for i in 1..<uriPrefixes.count
+        where uri.utf8.starts(with: uriPrefixes[i].utf8) && uriPrefixes[i].utf8.count > uriPrefixes[code].utf8.count {
+            code = i
+        }
+        let rest = Array(uri.utf8.dropFirst(uriPrefixes[code].utf8.count))
+        return NdefRecord(tnf: 1, type: [0x55], id: [], payload: [UInt8(code)] + rest)
+    }
+
     /// NFC Forum NDEF 1.0 message encoding. Core NFC does not expose raw
     /// message bytes, so both platforms build them here for {ndef_raw}.
     public static func encode(_ records: [NdefRecord]) -> [UInt8] {

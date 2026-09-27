@@ -215,7 +215,8 @@ final class ConformanceTests: XCTestCase {
         for c in f["cases"]?.array ?? [] {
             let set: RuleSet
             if let r = c["rules"], !r.isNull { set = try Rules.fromJSON(r) } else { set = base }
-            let got = Rules.route(set, variables: strMap(c["variables"]), activeProfileId: c["activeProfileId"]?.string)
+            let got = Rules.route(set, variables: strMap(c["variables"]), activeProfileId: c["activeProfileId"]?.string,
+                                  tagProfileId: c["tagProfileId"]?.string)
             let id = c["id"]!.string!
             XCTAssertEqual(got.profileIds, (c["expectProfiles"]?.array ?? []).compactMap { $0.string }, id)
             XCTAssertEqual(got.ruleId, c["expectRule"]?.string, id)
@@ -228,6 +229,36 @@ final class ConformanceTests: XCTestCase {
             let rule = try Rules.fromJSON(.object([JSONMember("rules", .array([e["rule"]!]))])).rules[0]
             XCTAssertEqual(Rules.error(rule), e["error"]?.string)
         }
+    }
+
+    func testTags() throws {
+        let f = try fixture("tags_vectors.json")
+        let reg = try Tags.fromJSON(f["registry"]!)
+        XCTAssertEqual(Tags.encode(reg), f["encoded"]!.string!)
+        XCTAssertEqual(try Tags.decode(Tags.encode(reg)), reg)
+        for c in f["find"]?.array ?? [] {
+            let got = Tags.find(reg, uid: c["uid"]!.string!, token: c["token"]!.string!, randomUid: c["randomUid"]!.bool!)
+            XCTAssertEqual(got?.label, c["expectLabel"]?.string, c["id"]!.string!)
+        }
+        for c in f["tokens"]?.array ?? [] {
+            let tok = Tags.token(hex(c["bytes"]!.string!)!)
+            XCTAssertEqual(tok, c["token"]!.string!)
+            XCTAssertEqual(Tags.link(tok), c["link"]!.string!)
+            XCTAssertEqual(Variables.launchToken(Tags.link(tok)), tok)
+        }
+        for c in f["validTokens"]?.array ?? [] {
+            XCTAssertEqual(Tags.isToken(c["token"]!.string!), c["valid"]!.bool!, c["token"]!.string!)
+        }
+        XCTAssertTrue(Tags.isToken(Tags.newToken()))
+        // A tagless launch builds the same variables as the shared vector.
+        let v = try fixture("variables_vectors.json")["cases"]!.array!.first { $0["id"]?.string == "launch_without_tag" }!
+        let expect = strMap(v["expect"])
+        let x = v["context"]!
+        let ctx = SendContext(
+            scanTimeMs: Int64(x["scanTimeMs"]!.int!), sendTimeMs: Int64(x["sendTimeMs"]!.int!), timeZone: x["tz"]!.string!,
+            profileName: x["profileName"]!.string!, profileId: x["profileId"]!.string!, deviceLabel: x["deviceLabel"]?.string ?? "",
+            platform: x["platform"]!.string!, nonce: x["nonce"]!.string!, seq: Int64(x["seq"]!.int!))
+        XCTAssertEqual(Variables.build(Tags.launchReading(link: expect["payload"]!), ctx), expect)
     }
 
     func testResultText() throws {

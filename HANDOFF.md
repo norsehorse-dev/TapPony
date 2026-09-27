@@ -91,3 +91,30 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
   - `header:Name` messages: iOS merges repeated headers with ", ", while Android takes the first.
 - **Deferred:** a per-profile Control Center control. Its profile picker runs in the extension and would need an App Group to share the profile list. For now, the control uses the active profile, the same as the Android tile.
 - **First build on the Mac:** `xcodegen generate` now creates two targets. Automatic signing registers `com.tappony.app.widgets` on first build. After installing, add the control from Control Center's edit mode.
+
+## Phase D: own tags (Sep 26, 2026, both platforms)
+
+- **Spec:**
+  - Section 16 is new: the tags registry (`tags.json`) and launch links.
+  - Section 14 adds the `tag_label` rule field, and a tag's own default profile now sits between a matching rule and the active profile (it also beats "send nothing").
+  - Section 10 defines a launch that arrives without a tag read: empty UID variables and tag type `launch_link`.
+  - New fixtures: `tags_vectors.json` (registry codec, lookup, token encoding, token validation), 6 new routing cases, and the `launch_without_tag` variables case.
+  - Kotlin core: 15 of 15 green in the cloud. The Swift twin has matching tests (`testTags`) and still needs `swift test`.
+- **Tags tab on both platforms:**
+  - Write a launch link, a link, text, or "Mirror UID" (the tag's own UID as a Text record).
+  - Optional permanent lock, behind a second confirmation.
+  - "Your tags" lets you name a tag, add notes, and pick its own profile.
+  - Writing a launch link registers the tag with a new 22-character token.
+  - Android writes in reader mode, and formats blank tags when it has to. It checks that the tag can be locked before writing. iOS writes through a Core NFC tag session.
+- **Routing:** every scan looks the tag up in the registry by token, then by UID (never a random UID). That gives `{tag_label}` and the tag's own profile.
+- **Launch links:** `https://tappony.app/t/?k=<token>`.
+  - Android: `NDEF_DISCOVERED`, plus App Links with autoVerify.
+  - iOS: background tag reading through the Associated Domains entitlement `applinks:tappony.app` and `NSUserActivity.ndefMessagePayload`, plus universal links.
+  - A registered token sends to the tag's route. An unknown token opens the Scan tab and sends nothing.
+- **Site files:** `site/.well-known/` in the iOS repo holds the AASA file and an `assetlinks.json` template. The Android signing fingerprint is still a placeholder. Background launch needs tappony.app live with both files.
+- **Check on device:**
+  - Write each record type to an NTAG215 and read it back with another NFC app.
+  - A launch link written on the iPhone opens TapPony from the Lock Screen notification and sends.
+  - The same on Android with the app closed, and it doesn't send twice when the app comes up.
+  - Locking works only on a spare sticker; it is permanent.
+- **Still open for Phase D:** the tappony.app site itself on the Pony family shell (index, privacy, support, receiver docs).
