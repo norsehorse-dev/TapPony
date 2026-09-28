@@ -47,3 +47,6 @@ vendor/bundle/
 # transfer leftovers
 _to_delete/
 *.tgz
+
+# Website deploy bundle (built outside git)
+_deploy/
