@@ -76,7 +76,7 @@ struct ProfileEditorView: View {
             }
             Section("Body") {
                 Picker("Type", selection: p.request.body.type) {
-                    ForEach(BodyType.allCases, id: \.self) { Text($0.rawValue).tag($0) }
+                    ForEach(BodyType.allCases, id: \.self) { Text(Self.bodyLabel($0)).tag($0) }
                 }
                 .pickerStyle(.segmented)
                 switch p.wrappedValue.request.body.type {
@@ -160,7 +160,7 @@ struct ProfileEditorView: View {
                 }
             }
             Section {
-                Button(testing ? "Testing…" : "Test") {
+                Button(testing ? String(localized: "Testing…") : String(localized: "Test")) {
                     testing = true
                     let snapshot = p.wrappedValue
                     Task {
@@ -275,6 +275,17 @@ struct ProfileEditorView: View {
             out.append(String(localized: "\"Show from the reply\" must start with json: or header:."))
         }
         return out
+    }
+}
+
+extension ProfileEditorView {
+    static func bodyLabel(_ t: BodyType) -> String {
+        switch t {
+        case .json: return "JSON"
+        case .form: return String(localized: "Form")
+        case .raw: return String(localized: "Raw")
+        case .none: return String(localized: "No body")
+        }
     }
 }
 

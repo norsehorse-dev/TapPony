@@ -42,6 +42,14 @@
         }
       }
     },
+    "%@" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
+    "%@ %@" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "%lld days" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1682,6 +1690,10 @@
         }
       }
     },
+    "Discord" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "Each tag once per batch" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1883,6 +1895,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "全部免费"
+          }
+        }
+      }
+    },
+    "Export" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportieren"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exporter"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportar"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Экспорт"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导出"
           }
         }
       }
@@ -2174,6 +2227,47 @@
         }
       }
     },
+    "Form" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formular"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formulario"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formulaire"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formulário"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Форма"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表单"
+          }
+        }
+      }
+    },
     "Form POST" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2255,6 +2349,10 @@
           }
         }
       }
+    },
+    "Google Sheets" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "HTTP status" : {
       "extractionState" : "manual",
@@ -2748,6 +2846,10 @@
         }
       }
     },
+    "IFTTT" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "If a scan gets no response, it waits on this phone and goes out in order once there's a connection, for up to 24 hours. Receivers can spot a repeat by its {nonce}. Leave this off for things like door locks, where a late request would be wrong." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2870,6 +2972,10 @@
           }
         }
       }
+    },
+    "JSON" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "JSON POST" : {
       "extractionState" : "manual",
@@ -3157,6 +3263,10 @@
           }
         }
       }
+    },
+    "Make" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "Maker" : {
       "extractionState" : "manual",
@@ -4060,6 +4170,47 @@
         }
       }
     },
+    "No body" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Body"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin cuerpo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sans corps"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem corpo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Без тела"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无请求体"
+          }
+        }
+      }
+    },
     "No named tags yet. Launch links you write show up here." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -4346,6 +4497,10 @@
           }
         }
       }
+    },
+    "Node-RED" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "None" : {
       "extractionState" : "manual",
@@ -5614,6 +5769,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "已排队"
+          }
+        }
+      }
+    },
+    "Raw" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Roh"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin formato"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Brut"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bruto"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Произвольное"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "原始"
           }
         }
       }
@@ -7463,6 +7659,10 @@
         }
       }
     },
+    "Slack" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "Sound after each scan" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7790,6 +7990,10 @@
           }
         }
       }
+    },
+    "TapPony" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "TapPony %@. Scan a tag, send a request you designed to a server you chose. No account, no cloud, no analytics. Suggested by a tester." : {
       "extractionState" : "manual",
@@ -8160,6 +8364,47 @@
         }
       }
     },
+    "Testing…" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird getestet…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Probando…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Test en cours…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Testando…"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Проверка…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在测试…"
+          }
+        }
+      }
+    },
     "Text" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8447,6 +8692,47 @@
         }
       }
     },
+    "The URL couldn't be read. Check it for typos." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die URL konnte nicht gelesen werden. Prüfe sie auf Tippfehler."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se pudo leer la URL. Revisa si tiene errores."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’URL n’a pas pu être lue. Vérifiez qu’elle ne contient pas de faute de frappe."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível ler a URL. Verifique se há erros de digitação."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось прочитать URL. Проверьте, нет ли в нём опечаток."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "无法读取该 URL。请检查是否有拼写错误。"
+          }
+        }
+      }
+    },
     "The URL isn't valid. It needs to start with https:// or http:// and the host can't contain variables." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8566,6 +8852,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "此配置使用了未保存在本设备上的机密。请在设置中添加。"
+          }
+        }
+      }
+    },
+    "The profile was deleted before this scan could be sent." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Profil wurde gelöscht, bevor dieser Scan gesendet werden konnte."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El perfil se eliminó antes de que se pudiera enviar este escaneo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le profil a été supprimé avant que ce scan puisse être envoyé."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O perfil foi excluído antes que esta leitura pudesse ser enviada."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Профиль был удалён до того, как это сканирование удалось отправить."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "此次扫描发送前，配置已被删除。"
           }
         }
       }
@@ -10579,6 +10906,10 @@
         }
       }
     },
+    "Zapier" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "a deleted profile" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10784,6 +11115,10 @@
         }
       }
     },
+    "n8n" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
+    },
     "no profiles" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -10824,6 +11159,10 @@
           }
         }
       }
+    },
+    "ntfy" : {
+      "extractionState" : "manual",
+      "shouldTranslate" : false
     },
     "starts with" : {
       "extractionState" : "manual",

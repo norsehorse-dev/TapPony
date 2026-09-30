@@ -146,7 +146,7 @@ enum HistoryText {
         switch e.outcome {
         case HistoryCsv.ok, HistoryCsv.httpError:
             let head = "HTTP \(e.status.map { String($0) } ?? "")".trimmingCharacters(in: .whitespaces)
-            return head + (e.latencyMs.map { " · \($0) ms" } ?? "")
+            return head + (e.latencyMs.map { " · " + String(localized: "\($0) ms") } ?? "")
         case HistoryCsv.networkError:
             return String(localized: "Network error")
         default:

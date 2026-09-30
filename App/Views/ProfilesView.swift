@@ -80,7 +80,9 @@ struct PresetPicker: View {
                 }
                 ForEach(Presets.all, id: \.key) { preset in
                     Button {
-                        onPick(preset.create(ProfileStore.newId()))
+                        var p = preset.create(ProfileStore.newId())
+                        p.name = PresetText.title(preset.key)
+                        onPick(p)
                     } label: {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(PresetText.title(preset.key)).foregroundStyle(.primary)

@@ -204,7 +204,7 @@ struct ResultCard: View {
                     .foregroundStyle(Palette.warn)
             }
             if let e = outcome.buildError { Text(ErrorText.explain(e)).foregroundStyle(Palette.fail) }
-            if let e = r?.error { Text(e).font(.system(.footnote, design: .monospaced)).foregroundStyle(Palette.fail) }
+            if let e = r?.error { Text(ErrorText.explain(e)).font(.system(.footnote, design: .monospaced)).foregroundStyle(Palette.fail) }
             if let b = r?.responseBody, !b.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 Text(String(b.prefix(600))).font(.system(.footnote, design: .monospaced)).foregroundStyle(.secondary)
             }
@@ -239,6 +239,10 @@ enum ErrorText {
             return String(localized: "The JSON body isn't valid JSON after filling in the variables.")
         case "badHeaderName":
             return String(localized: "Header names can only use letters, digits and - _ . characters.")
+        case "malformedUrl":
+            return String(localized: "The URL couldn't be read. Check it for typos.")
+        case "profileDeleted":
+            return String(localized: "The profile was deleted before this scan could be sent.")
         default:
             if code.hasPrefix("hostPolicy:") || code.hasPrefix("urlTemplate:") {
                 return String(localized: "The URL isn't valid. It needs to start with https:// or http:// and the host can't contain variables.")
