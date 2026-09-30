@@ -52,7 +52,7 @@ struct TagsView: View {
                         TextField("Text", text: $content, axis: .vertical)
                     case .launch:
                         TextField("Name", text: Binding(get: { launchLabel }, set: { launchLabel = String($0.prefix(64)) }))
-                        profilePicker($launchProfile)
+                        if Entitlements.tagDefaults { profilePicker($launchProfile) }
                     case .mirror:
                         EmptyView()
                     }
@@ -80,7 +80,8 @@ struct TagsView: View {
                         Button { editing = t } label: { row(t) }
                             .buttonStyle(.plain)
                     }
-                    if let last = lastUid, !tags.current.tags.contains(where: { $0.uid == Tags.normUid(last) }) {
+                    if let last = lastUid, !tags.current.tags.contains(where: { $0.uid == Tags.normUid(last) }),
+                       Entitlements.canAddTag(count: tags.current.tags.count) {
                         Button("Name last scanned tag (\(last))") { editing = TagEntry(uid: Tags.normUid(last), label: "") }
                     }
                 } header: {
@@ -131,6 +132,7 @@ struct TagsView: View {
     }
 
     private func startWrite() {
+        if kind == .launch && !Entitlements.canAddTag(count: tags.current.tags.count) { return }
         let job: WriteJob
         switch kind {
         case .url: job = .url(content.trimmingCharacters(in: .whitespaces))
@@ -210,10 +212,12 @@ private struct TagEditor: View {
                     Text("Has a TapPony launch link").foregroundStyle(Palette.blueLight)
                 }
                 TextField("Name", text: Binding(get: { t.label }, set: { t.label = String($0.prefix(64)) }))
-                TextField("Notes", text: Binding(get: { t.notes }, set: { t.notes = String($0.prefix(500)) }), axis: .vertical)
-                Picker("Send to", selection: $t.profile) {
-                    Text("Usual profile").tag(String?.none)
-                    ForEach(profiles.profiles) { p in Text(p.name).tag(String?.some(p.id)) }
+                if Entitlements.tagDefaults {
+                    TextField("Notes", text: Binding(get: { t.notes }, set: { t.notes = String($0.prefix(500)) }), axis: .vertical)
+                    Picker("Send to", selection: $t.profile) {
+                        Text("Usual profile").tag(String?.none)
+                        ForEach(profiles.profiles) { p in Text(p.name).tag(String?.some(p.id)) }
+                    }
                 }
                 if !isNew {
                     Button("Forget this tag", role: .destructive) {

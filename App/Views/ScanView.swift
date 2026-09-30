@@ -19,7 +19,7 @@ struct ScanView: View {
                     } else if profiles.profiles.isEmpty {
                         Notice(text: String(localized: "Create a profile first. A profile says where each scan gets sent."))
                     }
-                    batchBar
+                    if Entitlements.batch { batchBar }
                     if queue.count > 0 {
                         HStack {
                             Text("\(queue.count) waiting to send").foregroundStyle(Palette.warn)

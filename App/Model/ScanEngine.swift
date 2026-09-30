@@ -92,7 +92,7 @@ final class ScanEngine {
         let ctx = context(p, scanTimeMs: scanTimeMs, tagLabel: tagLabel)
         let vars = Variables.build(reading, ctx)
         var outcome = await send(p, vars, scanTimeMs: ctx.scanTimeMs, sendTimeMs: ctx.sendTimeMs)
-        if let queue, p.after.queueOffline, outcome.isNoResponse,
+        if let queue, p.after.queueOffline, Entitlements.offlineQueue, outcome.isNoResponse,
            queue.enqueue(p, scanTimeMs: scanTimeMs, variables: vars, error: outcome.result?.error ?? "") {
             outcome.queued = true
             outcome.resultText = nil
@@ -129,11 +129,13 @@ final class ScanEngine {
             req = try RequestBuilder.build(p, variables: vars, secrets: secrets, sendUnix: sendTimeMs / 1000)
         } catch let e as RequestError {
             o.buildError = e.code
-            o.resultText = ResultText.render(p.after.failureText, status: nil, message: nil, uid: o.uid, profile: p.name)
+            o.resultText = Entitlements.responseRules
+                ? ResultText.render(p.after.failureText, status: nil, message: nil, uid: o.uid, profile: p.name) : nil
             return o
         } catch {
             o.buildError = "\(error)"
-            o.resultText = ResultText.render(p.after.failureText, status: nil, message: nil, uid: o.uid, profile: p.name)
+            o.resultText = Entitlements.responseRules
+                ? ResultText.render(p.after.failureText, status: nil, message: nil, uid: o.uid, profile: p.name) : nil
             return o
         }
         let raw = await sender.send(req, allowLocalHttp: p.request.allowLocalHttp)
@@ -151,8 +153,9 @@ final class ScanEngine {
         result.responseBody = raw.responseBody.map(mask)
         result.error = raw.error.map(mask)
         let headers = raw.responseHeaders.map { ($0.name, mask($0.value)) }
-        let message = ResponseMessage.extract(field: p.after.messageField, headers: headers, body: result.responseBody)
-        let template = result.ok ? p.after.successText : p.after.failureText
+        let message = Entitlements.responseRules
+            ? ResponseMessage.extract(field: p.after.messageField, headers: headers, body: result.responseBody) : nil
+        let template = Entitlements.responseRules ? (result.ok ? p.after.successText : p.after.failureText) : nil
         o.request = RequestBuilder.masked(req, secrets: secrets)
         o.result = result
         o.message = message

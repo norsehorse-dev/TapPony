@@ -93,11 +93,12 @@ final class ScanController: ObservableObject {
                 r.profiles = r.profiles.filter { live.contains($0) }
                 return r
             }
-            let tagProfile = entry?.profile.flatMap { live.contains($0) ? $0 : nil }
+            if !Entitlements.rules { liveRules.enabled = false }
+            let tagProfile = Entitlements.tagDefaults ? entry?.profile.flatMap { live.contains($0) ? $0 : nil } : nil
             let route = Rules.route(liveRules, variables: vars, activeProfileId: model.activeProfile?.id, tagProfileId: tagProfile)
             targets = route.profileIds.compactMap { id in all.first { $0.id == id } }
             if targets.isEmpty {
-                let ignored = rules.enabled && route.ruleId == nil && rules.unmatched == RuleSet.unmatchedIgnore
+                let ignored = liveRules.enabled && route.ruleId == nil && rules.unmatched == RuleSet.unmatchedIgnore
                 return .failure(ignored ? .noRule : .noProfile)
             }
         }
@@ -175,7 +176,7 @@ final class ScanController: ObservableObject {
 
     func setBatch(_ on: Bool) {
         if on {
-            guard !reading, let spec = readSpec() else { return }
+            guard Entitlements.batch, !reading, let spec = readSpec() else { return }
             resetBatch()
             batchOn = true
             state = .idle

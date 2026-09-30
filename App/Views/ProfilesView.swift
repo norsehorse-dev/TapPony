@@ -10,13 +10,15 @@ struct ProfilesView: View {
     var body: some View {
         NavigationStack(path: $path) {
             List {
-                Section {
-                    NavigationLink {
-                        RulesView()
-                    } label: {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Rules").font(.headline)
-                            Text(rulesStatus).font(.footnote).foregroundStyle(.secondary)
+                if Entitlements.rules {
+                    Section {
+                        NavigationLink {
+                            RulesView()
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Rules").font(.headline)
+                                Text(rulesStatus).font(.footnote).foregroundStyle(.secondary)
+                            }
                         }
                     }
                 }
@@ -41,6 +43,7 @@ struct ProfilesView: View {
             }
             .toolbar {
                 Button { picking = true } label: { Image(systemName: "plus") }
+                    .disabled(!Entitlements.canAddProfile(count: profiles.profiles.count))
                     .accessibilityLabel("New profile")
             }
             .sheet(isPresented: $picking) {

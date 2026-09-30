@@ -1,0 +1,112 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony"
+          }
+        }
+      },
+      "shouldTranslate" : false
+    },
+    "NFCReaderUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony reads the tags you scan and sends their details to the server you set up."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony liest die Tags, die du scannst, und sendet ihre Details an den Server, den du eingerichtet hast."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony lee las etiquetas que escaneas y envía sus detalles al servidor que configuraste."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony lit les tags que vous scannez et envoie leurs détails au serveur que vous avez configuré."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O TapPony lê as tags que você escaneia e envia os detalhes delas para o servidor que você configurou."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony считывает метки, которые вы сканируете, и отправляет их данные на настроенный вами сервер."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony 会读取你扫描的标签，并将标签详情发送到你设置的服务器。"
+          }
+        }
+      }
+    },
+    "NSLocalNetworkUsageDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony sends scans to servers on your local network, such as Home Assistant, when a profile points there."
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony sendet Scans an Server in deinem lokalen Netzwerk, etwa Home Assistant, wenn ein Profil dorthin zeigt."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony envía los escaneos a servidores de tu red local, como Home Assistant, cuando un perfil apunta allí."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony envoie les scans aux serveurs de votre réseau local, comme Home Assistant, lorsqu’un profil pointe vers eux."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O TapPony envia leituras para servidores na sua rede local, como o Home Assistant, quando um perfil aponta para eles."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony отправляет сканирования на серверы в вашей локальной сети, например Home Assistant, если профиль указывает туда."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当配置指向局域网中的服务器（例如 Home Assistant）时，TapPony 会将扫描发送到这些服务器。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.1"
+}

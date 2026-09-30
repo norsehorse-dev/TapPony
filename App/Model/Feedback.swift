@@ -66,6 +66,6 @@ final class Feedback: NSObject, AVSpeechSynthesizerDelegate {
         let ok = results.allSatisfy { $0.1.queued || $0.1.result?.ok == true }
         if results.contains(where: { $0.0.after.sound }) { tone(ok: ok) }
         if results.contains(where: { $0.0.after.haptic }) { haptic(ok: ok) }
-        for (p, o) in results where p.after.speak { speak(Self.spoken(o)) }
+        for (p, o) in results where p.after.speak && Entitlements.responseRules { speak(Self.spoken(o)) }
     }
 }

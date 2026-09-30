@@ -124,25 +124,29 @@ struct ProfileEditorView: View {
                 Toggle("Only send when the tag has NDEF content", isOn: p.tag.requireNdef)
             }
             Section {
-                VStack(alignment: .leading, spacing: 2) {
-                    TextField("Show from the reply", text: optional(p.after.messageField))
-                        .font(.system(.body, design: .monospaced))
-                        .textInputAutocapitalization(.never).autocorrectionDisabled()
-                    Text("json:path.to.field or header:Name. Shown on the Scan tab after each tap.")
-                        .font(.caption).foregroundStyle(.secondary)
+                if Entitlements.responseRules {
+                    VStack(alignment: .leading, spacing: 2) {
+                        TextField("Show from the reply", text: optional(p.after.messageField))
+                            .font(.system(.body, design: .monospaced))
+                            .textInputAutocapitalization(.never).autocorrectionDisabled()
+                        Text("json:path.to.field or header:Name. Shown on the Scan tab after each tap.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    VStack(alignment: .leading, spacing: 2) {
+                        TextField("Text on success (optional)", text: optional(p.after.successText))
+                        TextField("Text on failure (optional)", text: optional(p.after.failureText))
+                        Text("Shown big after a scan. Can use {message}, {status}, {uid} and {profile}.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    Toggle("Say the result out loud", isOn: p.after.speak)
                 }
-                VStack(alignment: .leading, spacing: 2) {
-                    TextField("Text on success (optional)", text: optional(p.after.successText))
-                    TextField("Text on failure (optional)", text: optional(p.after.failureText))
-                    Text("Shown big after a scan. Can use {message}, {status}, {uid} and {profile}.")
-                        .font(.caption).foregroundStyle(.secondary)
-                }
-                Toggle("Say the result out loud", isOn: p.after.speak)
                 Toggle("Keep request and response bodies in history", isOn: p.after.keepBodies)
-                Toggle("Save and send later when offline", isOn: p.after.queueOffline)
-                if p.wrappedValue.after.queueOffline {
-                    Text("If a scan gets no response, it waits on this phone and goes out in order once there's a connection, for up to 24 hours. Receivers can spot a repeat by its {nonce}. Leave this off for things like door locks, where a late request would be wrong.")
-                        .font(.caption).foregroundStyle(.secondary)
+                if Entitlements.offlineQueue {
+                    Toggle("Save and send later when offline", isOn: p.after.queueOffline)
+                    if p.wrappedValue.after.queueOffline {
+                        Text("If a scan gets no response, it waits on this phone and goes out in order once there's a connection, for up to 24 hours. Receivers can spot a repeat by its {nonce}. Leave this off for things like door locks, where a late request would be wrong.")
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
                 }
                 Toggle("Sound after each scan", isOn: p.after.sound)
                 Toggle("Vibrate with the result", isOn: p.after.haptic)

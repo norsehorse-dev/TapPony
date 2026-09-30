@@ -118,3 +118,19 @@ cd ~/Apps/TapPonyAndroid && ./gradlew :core:test :app:assembleDebug
   - The same on Android with the app closed, and it doesn't send twice when the app comes up.
   - Locking works only on a spare sticker; it is permanent.
 - **Still open for Phase D:** the tappony.app site itself on the Pony family shell (index, privacy, support, receiver docs).
+
+## Phase E part 1: gate audit and locales (Sep 30, 2026, both platforms)
+
+- **Entitlement gate:** `Entitlements` (`App/Model/Entitlements.swift`, `app/.../Entitlements.kt`). `plus` is always true in 1.0, so nothing changes for users. Every Plus feature from planning section 8 that exists in code checks it:
+  - more than 3 profiles (the New profile button)
+  - rules, including the Rules entry on the Profiles tab and routing itself
+  - batch mode (Scan toggle, Settings section, `setBatch`)
+  - offline queue (the editor toggle and the engine)
+  - response rules: reply field, custom result text, spoken result (editor and engine)
+  - more than 25 named tags, plus tag notes and a tag's own profile
+  - The engine-level checks are the real gate; the UI checks only hide controls.
+- **Not built, so not gated:** encrypted all-profile export with QR handoff, and named custom UID formats. Both are on the Plus list in section 8. Drop them from the listing or build them before the unlock ships.
+- **Settings:** a new "Everything is free" line above About.
+- **String freeze:** Android `values-de`, `-es`, `-fr`, `-pt-rBR`, `-ru`, `-b+zh+Hans`, plus `xml/locales_config.xml` for the per-app language picker. iOS `Localizable.xcstrings`, `InfoPlist.xcstrings`, `AppShortcuts.xcstrings` and `Widgets/Localizable.xcstrings`, with the same six languages. Brand-name preset titles are marked not translatable.
+- **Review:** these are machine drafts. The security wording needs a native reader for ru, zh-Hans and pt-BR: the local network and plain HTTP warnings, the secrets text, locking, random-ID tags and the free note.
+- **iOS catalog keys** were written by hand from the source. After `xcodegen`, the first build syncs the catalogs. Any key that shows as new and untranslated in Xcode is one that was missed, so send those back for a second pass.
