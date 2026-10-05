@@ -66,12 +66,9 @@ struct SettingsView: View {
                     Text("Every feature in TapPony is on, with nothing to buy, no account and no ads.")
                         .foregroundStyle(.secondary)
                 }
-                Section("About") {
-                    Text("TapPony \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? ""). Scan a tag, send a request you designed to a server you chose. No account, no cloud, no analytics. Suggested by a tester.")
-                        .foregroundStyle(.secondary)
-                    Link("Source code", destination: URL(string: "https://github.com/norsehorse-dev/TapPony")!)
-                    Link("More from NorseHorse", destination: URL(string: "https://norsehor.se")!)
-                }
+                SupportSection()
+                FamilySection()
+                AboutSection()
             }
             .navigationTitle("Settings")
             .onAppear { names = SecretStore.names() }

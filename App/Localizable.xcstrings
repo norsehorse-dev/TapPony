@@ -255,6 +255,47 @@
         }
       }
     },
+    "A password manager for pass and passage stores" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Passwortmanager für pass- und passage-Speicher"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un gestor de contraseñas para almacenes de pass y passage"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Un gestionnaire de mots de passe pour les dépôts pass et passage"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um gerenciador de senhas para repositórios pass e passage"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Менеджер паролей для хранилищ pass и passage"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "适用于 pass 和 passage 密码库的密码管理器"
+          }
+        }
+      }
+    },
     "API key" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -665,6 +706,47 @@
         }
       }
     },
+    "All Pony apps" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Pony-Apps"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todas las apps Pony"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les applis Pony"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os apps Pony"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Все приложения Pony"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有 Pony 应用"
+          }
+        }
+      }
+    },
     "Allow plain HTTP on the local network" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -784,6 +866,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "同一 Wi-Fi 上的任何人都能读取明文 HTTP 请求，包括其中的任何机密。"
+          }
+        }
+      }
+    },
+    "At tappony.app/privacy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auf tappony.app/privacy"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En tappony.app/privacy"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sur tappony.app/privacy"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Em tappony.app/privacy"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "На tappony.app/privacy"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "见 tappony.app/privacy"
           }
         }
       }
@@ -1817,6 +1940,47 @@
         }
       }
     },
+    "Encrypted file transfer, phone to phone" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verschlüsselte Dateiübertragung von Telefon zu Telefon"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transferencia de archivos cifrada, de teléfono a teléfono"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transfert de fichiers chiffré, de téléphone à téléphone"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Transferência de arquivos criptografada, de telefone a telefone"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Зашифрованная передача файлов, с телефона на телефон"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "加密文件传输，手机到手机"
+          }
+        }
+      }
+    },
     "Every feature in TapPony is on, with nothing to buy, no account and no ads." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2059,6 +2223,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "字段"
+          }
+        }
+      }
+    },
+    "File encryption with the age format" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dateiverschlüsselung mit dem age-Format"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cifrado de archivos con el formato age"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffrement de fichiers au format age"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criptografia de arquivos com o formato age"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шифрование файлов в формате age"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "使用 age 格式进行文件加密"
           }
         }
       }
@@ -2559,6 +2764,47 @@
         }
       }
     },
+    "Help and receiver docs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfe und Empfänger-Doku"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayuda y documentación para receptores"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aide et documentation des récepteurs"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajuda e documentação de receptores"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Справка и документация для приёмников"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帮助与接收端文档"
+          }
+        }
+      }
+    },
     "History" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2973,6 +3219,47 @@
         }
       }
     },
+    "It uses no third-party code, only Apple's frameworks." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Es enthält keinen Code von Dritten, nur Apples Frameworks."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No incluye código de terceros, solo los frameworks de Apple."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Il ne contient aucun code tiers, uniquement les frameworks d’Apple."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ele não usa código de terceiros, apenas os frameworks da Apple."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "В нём нет стороннего кода, только фреймворки Apple."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "它不含任何第三方代码，只使用 Apple 的框架。"
+          }
+        }
+      }
+    },
     "JSON" : {
       "extractionState" : "manual",
       "shouldTranslate" : false
@@ -3137,6 +3424,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "启动链接"
+          }
+        }
+      }
+    },
+    "Leave a rating on the App Store" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hinterlasse eine Bewertung im App Store"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deja una valoración en la App Store"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laissez une note sur l’App Store"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deixe uma avaliação na App Store"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оставьте оценку в App Store"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 App Store 留下评分"
+          }
+        }
+      }
+    },
+    "Licenses" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lizenzen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licencias"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licences"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Licenças"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Лицензии"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "许可证"
           }
         }
       }
@@ -3532,19 +3901,19 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Autres apps de NorseHorse"
+            "value" : "Plus de NorseHorse"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mais apps de NorseHorse"
+            "value" : "Mais da NorseHorse"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Другие приложения NorseHorse"
+            "value" : "Больше от NorseHorse"
           }
         },
         "zh-Hans" : {
@@ -4953,6 +5322,47 @@
         }
       }
     },
+    "OpenPGP encryption for messages, files and keys" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenPGP-Verschlüsselung für Nachrichten, Dateien und Schlüssel"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cifrado OpenPGP para mensajes, archivos y claves"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chiffrement OpenPGP pour les messages, les fichiers et les clés"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criptografia OpenPGP para mensagens, arquivos e chaves"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Шифрование OpenPGP для сообщений, файлов и ключей"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用于消息、文件和密钥的 OpenPGP 加密"
+          }
+        }
+      }
+    },
     "Opens TapPony and starts a scan with the active profile." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5031,6 +5441,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "原厂签名"
+          }
+        }
+      }
+    },
+    "Other apps from the same developer." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weitere Apps vom selben Entwickler."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otras apps del mismo desarrollador."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D’autres applis du même développeur."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Outros apps do mesmo desenvolvedor."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Другие приложения того же разработчика."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同一开发者的其他应用。"
           }
         }
       }
@@ -5568,6 +6019,88 @@
         }
       }
     },
+    "Privacy policy" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Datenschutzerklärung"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Politique de confidentialité"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de privacidade"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Политика конфиденциальности"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "隐私政策"
+          }
+        }
+      }
+    },
+    "Private messaging and file transfer, sealed end to end" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Private Nachrichten und Dateiübertragung, Ende-zu-Ende versiegelt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensajería privada y transferencia de archivos, sellada de extremo a extremo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Messagerie privée et transfert de fichiers, scellés de bout en bout"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mensagens privadas e transferência de arquivos, seladas de ponta a ponta"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Личные сообщения и передача файлов, запечатанные сквозным шифрованием"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "私密消息与文件传输，端到端加密"
+          }
+        }
+      }
+    },
     "Profile" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5773,6 +6306,47 @@
         }
       }
     },
+    "Rate TapPony" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony bewerten"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Valorar TapPony"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noter TapPony"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avaliar o TapPony"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Оценить TapPony"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "为 TapPony 评分"
+          }
+        }
+      }
+    },
     "Raw" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -5974,6 +6548,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "读取芯片详情（型号、签名、计数器）"
+          }
+        }
+      }
+    },
+    "Read the Apache License 2.0" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apache License 2.0 lesen"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leer la Apache License 2.0"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lire l’Apache License 2.0"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ler a Apache License 2.0"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Прочитать Apache License 2.0"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阅读 Apache License 2.0"
           }
         }
       }
@@ -6675,6 +7290,47 @@
         }
       }
     },
+    "Scan a tag, send a request you designed to a server you chose. No account, no cloud, no analytics. Suggested by a tester." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scanne ein Tag und sende eine selbst gestaltete Anfrage an einen Server deiner Wahl. Kein Konto, keine Cloud, keine Nutzungsanalyse. Vorgeschlagen von einem Tester."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escanea una etiqueta y envía una solicitud diseñada por ti a un servidor que tú eliges. Sin cuenta, sin nube, sin analíticas. Sugerida por un tester."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scannez un tag, envoyez une requête que vous avez conçue à un serveur de votre choix. Pas de compte, pas de cloud, pas de statistiques d’utilisation. Suggéré par un testeur."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escaneie uma tag e envie uma requisição criada por você para um servidor escolhido por você. Sem conta, sem nuvem, sem análise de uso. Sugerido por um testador."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Сканируйте метку и отправляйте составленный вами запрос на выбранный вами сервер. Без аккаунта, без облака, без аналитики. Приложение предложил один из тестировщиков."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "扫描标签，将你设计的请求发送到你选择的服务器。无账户，无云端，无统计分析。由一位测试者提议。"
+          }
+        }
+      }
+    },
     "Scan and Send" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7085,6 +7741,88 @@
         }
       }
     },
+    "Send a secret. Encrypted on your phone, burned after reading" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sende ein Geheimnis. Auf deinem Telefon verschlüsselt, nach dem Lesen verbrannt"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envía un secreto. Cifrado en tu teléfono, quemado tras la lectura"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyez un secret. Chiffré sur votre téléphone, brûlé après lecture"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envie um segredo. Criptografado no seu telefone, queimado após a leitura"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправьте секрет. Зашифрован на вашем телефоне, уничтожается после прочтения"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送秘密。在你的手机上加密，阅后即焚"
+          }
+        }
+      }
+    },
+    "Send feedback" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feedback senden"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar comentarios"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Envoyer un commentaire"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar feedback"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Отправить отзыв"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "发送反馈"
+          }
+        }
+      }
+    },
     "Send nothing" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7409,6 +8147,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "仅当配置用到时才作为 {device_label} 发送。默认为空，因此不会有任何内容能识别出这部手机。"
+          }
+        }
+      }
+    },
+    "Setting up a receiver, at tappony.app/docs" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einen Empfänger einrichten, auf tappony.app/docs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cómo configurar un receptor, en tappony.app/docs"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configurer un récepteur, sur tappony.app/docs"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como configurar um receptor, em tappony.app/docs"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Как настроить приёмник: tappony.app/docs"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 tappony.app/docs 了解如何设置接收端"
           }
         }
       }
@@ -7745,6 +8524,47 @@
         }
       }
     },
+    "Split a secret into cards. Any few rebuild it." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Teile ein Geheimnis in Karten auf. Wenige genügen zum Wiederherstellen."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Divide un secreto en tarjetas. Unas pocas lo reconstruyen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Divisez un secret en cartes. Quelques-unes suffisent à le reconstituer."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Divida um segredo em cartões. Poucos deles o reconstroem."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Разделите секрет на карты. Любые несколько восстановят его."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将秘密拆分成多张卡片，任意几张即可重建。"
+          }
+        }
+      }
+    },
     "Stop batch" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7782,6 +8602,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "停止批量"
+          }
+        }
+      }
+    },
+    "Strip identifying metadata from images. No pixel moves." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entfernt identifizierende Metadaten aus Bildern. Keine Pixel werden verändert."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elimina los metadatos identificativos de las imágenes. No se mueve ningún píxel."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Supprime les métadonnées identifiantes des images. Aucun pixel n’est déplacé."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove metadados identificadores das imagens. Nenhum pixel é movido."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Удаляет идентифицирующие метаданные из изображений. Пиксели не меняются."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从图片中清除可识别身份的元数据。不改动任何像素。"
+          }
+        }
+      }
+    },
+    "Support" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Support"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Soporte"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assistance"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suporte"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Поддержка"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "支持"
           }
         }
       }
@@ -7995,47 +8897,6 @@
       "extractionState" : "manual",
       "shouldTranslate" : false
     },
-    "TapPony %@. Scan a tag, send a request you designed to a server you chose. No account, no cloud, no analytics. Suggested by a tester." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@. Scanne ein Tag und sende eine selbst gestaltete Anfrage an einen Server deiner Wahl. Kein Konto, keine Cloud, keine Nutzungsanalyse. Vorgeschlagen von einem Tester."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@. Escanea una etiqueta y envía una solicitud diseñada por ti a un servidor que tú eliges. Sin cuenta, sin nube, sin analíticas. Sugerida por un tester."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@. Scannez un tag, envoyez une requête que vous avez conçue à un serveur de votre choix. Pas de compte, pas de cloud, pas de statistiques d’utilisation. Suggéré par un testeur."
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@. Escaneie uma tag e envie uma requisição criada por você para um servidor escolhido por você. Sem conta, sem nuvem, sem análise de uso. Sugerido por um testador."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@. Сканируйте метку и отправляйте составленный вами запрос на выбранный вами сервер. Без аккаунта, без облака, без аналитики. Приложение предложил один из тестировщиков."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "TapPony %@。扫描标签，将你设计的请求发送到你选择的服务器。无账户，无云端，无统计分析。由一位测试者提议。"
-          }
-        }
-      }
-    },
     "TapPony Profile" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8118,6 +8979,47 @@
         }
       }
     },
+    "TapPony for iOS on GitHub" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony für iOS auf GitHub"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony para iOS en GitHub"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony pour iOS sur GitHub"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony para iOS no GitHub"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony для iOS на GitHub"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GitHub 上的 TapPony iOS 版"
+          }
+        }
+      }
+    },
     "TapPony is already reading a tag. Try again in a moment." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -8155,6 +9057,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "TapPony 正在读取标签。请稍后重试。"
+          }
+        }
+      }
+    },
+    "TapPony is open source under the Apache License 2.0." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony ist Open Source unter der Apache License 2.0."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony es de código abierto bajo la Apache License 2.0."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony est open source sous Apache License 2.0."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O TapPony é código aberto sob a Apache License 2.0."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Исходный код TapPony открыт по лицензии Apache License 2.0."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TapPony 以 Apache License 2.0 开源。"
           }
         }
       }
@@ -9098,6 +10041,47 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "标签在写入完成前移开了。请保持不动，然后重试。"
+          }
+        }
+      }
+    },
+    "The whole family at pony.norsehor.se" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die ganze Familie auf pony.norsehor.se"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toda la familia en pony.norsehor.se"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toute la famille sur pony.norsehor.se"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A família toda em pony.norsehor.se"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Всё семейство на pony.norsehor.se"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在 pony.norsehor.se 查看全系列"
           }
         }
       }
@@ -10328,6 +11312,88 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "值"
+          }
+        }
+      }
+    },
+    "VeraCrypt-compatible encrypted vaults, entirely on your device" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VeraCrypt-kompatible verschlüsselte Tresore, vollständig auf deinem Gerät"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cajas fuertes cifradas compatibles con VeraCrypt, todo en tu dispositivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coffres chiffrés compatibles VeraCrypt, entièrement sur votre appareil"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cofres criptografados compatíveis com VeraCrypt, inteiramente no seu dispositivo"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Совместимые с VeraCrypt зашифрованные хранилища, полностью на вашем устройстве"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "兼容 VeraCrypt 的加密保险库，完全在你的设备上运行"
+          }
+        }
+      }
+    },
+    "Version" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versión"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versão"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Версия"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本"
           }
         }
       }
